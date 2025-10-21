@@ -16,6 +16,7 @@
 		2205E9B52EA7E8050038A2A2 /* WeatherNewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2205E9B42EA7E8050038A2A2 /* WeatherNewsTests.swift */; };
 		2205E9BF2EA7E8050038A2A2 /* WeatherNewsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2205E9BE2EA7E8050038A2A2 /* WeatherNewsUITests.swift */; };
 		2205E9C12EA7E8050038A2A2 /* WeatherNewsUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2205E9C02EA7E8050038A2A2 /* WeatherNewsUITestsLaunchTests.swift */; };
+		2205E9CE2EA7F67F0038A2A2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2205E9CD2EA7F67F0038A2A2 /* Settings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		2205E9BA2EA7E8050038A2A2 /* WeatherNewsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WeatherNewsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2205E9BE2EA7E8050038A2A2 /* WeatherNewsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherNewsUITests.swift; sourceTree = "<group>"; };
 		2205E9C02EA7E8050038A2A2 /* WeatherNewsUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherNewsUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		2205E9CD2EA7F67F0038A2A2 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				2205E9A72EA7E8040038A2A2 /* Persistence.swift */,
 				2205E9A92EA7E8040038A2A2 /* WeatherNews.xcdatamodeld */,
 				2205E9A42EA7E8040038A2A2 /* Preview Content */,
+				2205E9CD2EA7F67F0038A2A2 /* Settings.swift */,
 			);
 			path = WeatherNews;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				2205E9AB2EA7E8040038A2A2 /* WeatherNews.xcdatamodeld in Sources */,
 				2205E9A12EA7E8010038A2A2 /* ContentView.swift in Sources */,
 				2205E99F2EA7E8010038A2A2 /* WeatherNewsApp.swift in Sources */,
+				2205E9CE2EA7F67F0038A2A2 /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
