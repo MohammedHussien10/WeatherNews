@@ -1,5 +1,5 @@
 //
-//  Settings.swift
+//  Alerts.swift
 //  WeatherNews
 //
 //  Created by Macos on 21/10/2025.
@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct Settings: View {
+struct Alerts: View {
     var body: some View {
-        Text("Settings")
+        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #Preview {
-    Settings()
+    Alerts()
 }
