@@ -7,8 +7,19 @@
 
 import SwiftUI
 struct Favorites: View {
+    @State private var showMap = false
     var body: some View {
-    Text("favourites")
+        NavigationStack {
+            VStack{
+              
+                
+                FAB{
+                    showMap = true
+                }
+            }
+        } .navigationDestination(isPresented: $showMap) {
+            MapView()
+        }
     }
 }
 

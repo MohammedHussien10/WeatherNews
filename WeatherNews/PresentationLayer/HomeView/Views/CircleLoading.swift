@@ -7,16 +7,27 @@
 
 import Foundation
 import SwiftUI
-struct DotsLoading: View {
-    @State private var rotate = false
-      
-      var body: some View {
-          Circle()
-              .trim(from: 0, to: 0.7)
-              .stroke(Color.blue, lineWidth: 6)
-              .frame(width: 60, height: 60)
-              .rotationEffect(.degrees(rotate ? 360 : 0))
-              .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: rotate)
-              .onAppear { rotate = true }
-      }
+struct CircleLoading: View {
+    
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.35)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 16) {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .tint(.white)
+                    .scaleEffect(1.4)
+                
+                Text("Loading...")
+                    .foregroundColor(.white)
+                    .font(.headline)
+            }
+            .padding(30)
+            .background(Color.black.opacity(0.6))
+            .cornerRadius(16)
+        }
+        .transition(.opacity)
+    }
 }

@@ -8,20 +8,52 @@
 import SwiftUI
 import CoreData
 
+
 struct WeatherContainer: View {
-    var body: some View{
-        
-        TabView{
-            NavigationStack{
-               
+    @EnvironmentObject var homeViewModel: HomeViewModel
+    var body: some View {
+        TabView() {
+
+            NavigationStack {
+                HomeView()
+            }
+            .tabItem {
+                Label("Home", systemImage: "cloud.sun.fill")
+                  
+            }
+
+
+            NavigationStack {
+                Alerts()
+            }
+            .tabItem {
+                Label("Alerts", systemImage: "alarm.fill")
                 
             }
-        }
+  
+
+            NavigationStack {
+                Favorites()
+            }
+            .tabItem {
+                Label("Favorites", systemImage: "heart.fill")
+                   
+            }
+
+
+            NavigationStack {
+                SettingsView()
+            }
+            .tabItem {
+                Label("Settings", systemImage: "gearshape.fill")
+                  
+            }
+       
+        }.tint(Color(hex: "#10e372"))
     }
 }
 
 
-
 #Preview {
-    ContentView()
+    WeatherContainer()
 }

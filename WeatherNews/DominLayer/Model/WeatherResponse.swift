@@ -17,6 +17,7 @@ struct WeatherResponse:Codable{
     let weather:[Weather]
     let sys: Sys
     let cod: Int
+    let timezone: Int
 }
 
 
@@ -69,4 +70,5 @@ struct City:Codable{
     let name:String
     let coord:Coord
     let country :String
+    let timezone: Int
 }

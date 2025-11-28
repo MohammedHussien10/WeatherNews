@@ -6,73 +6,103 @@
 //
 
 import SwiftUI
+// MARK: - Views
+struct SettingsView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue
+    @AppStorage("windSpeedUnit") private var windSpeedUnitRawValue: String = WindSpeedUnit.meterPerSecond.rawValue
+    @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
 
-struct Settings: View {
-    @State private var isDark = false
-    @State private var useLocation = true
-    
+
+    @State private var location: LocationMode = .gps
+    @State private var showMap = false
+    @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                ToggleCard(title: "Dark Mode", isOn: $isDark, icon: "moon.fill", color: .purple)
-                ToggleCard(title: "Use Current Location", isOn: $useLocation, icon: "location.fill", color: .blue)
-                InfoCard(title: "About App", subtitle: "WeatherNews v1.0\nMade by Amir")
-                PickerCard()
+                
+                HStack{
+                    Text("Dark Mode").font(.headline)
+                    Spacer()
+                    Button(action: {
+                        withAnimation(.easeInOut){
+                            isDarkMode.toggle()
+                        }
+                    }){
+                        Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill" )
+                            .font(.title2)
+                            .foregroundColor(isDarkMode ? .yellow : .blue)
+                            .padding(8)
+                            .background(
+                                Circle().fill(Color(.secondarySystemBackground))
+                                    .shadow(radius: 2)
+                            )
+                    }
+                }
+                .padding().background(Color(.secondarySystemBackground)).cornerRadius(12).shadow(radius: 1)
+                PickerCard(title: "Temperature Unit", selectedOption: Binding(
+                    get: { TemperatureUnit(rawValue: temperatureUnitRawValue) ?? .celsius },
+                    set: { temperatureUnitRawValue = $0.rawValue }
+                )).onChange(of: temperatureUnitRawValue) { _ in
+                    Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
+                                                            longitude: homeViewModel.savedLon) }
+                }
+
+                
+                
+                PickerCard(title: "Wind Speed Unit", selectedOption: Binding(
+                    get: { WindSpeedUnit(rawValue: windSpeedUnitRawValue) ?? .meterPerSecond },
+                    set: { windSpeedUnitRawValue = $0.rawValue }
+                )).onChange(of: windSpeedUnitRawValue) { _ in
+                    homeViewModel.refetchWindSpeed()
+                }
+
+                PickerCard(title: "Language", selectedOption: Binding(
+                    get: { AppLanguage(rawValue: languageRawValue) ?? .english },
+                    set: { languageRawValue = $0.rawValue }
+                )).onChange(of: languageRawValue) { _ in
+                    Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
+                                                            longitude: homeViewModel.savedLon) }
+                }
+                PickerCard(title: "Location Mode", selectedOption: $location).onChange(of: location){
+                    value in
+                    if value == .map{
+                        showMap = true
+                    }
+                }
+                InfoCard(title: "About App", subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien")
+
+                
+                
             }
             .padding()
         }
+        .background(
+            NavigationLink(destination: MapView(), isActive: $showMap) { EmptyView() }
+                       .hidden()
+               )
+        
         .navigationTitle("Settings")
     }
 }
 
-struct ToggleCard: View {
-    let title: String
-    @Binding var isOn: Bool
-    let icon: String
-    let color: Color
-    
-    var body: some View {
-        HStack {
-            Label(title, systemImage: icon)
-                .foregroundColor(color)
-            Spacer()
-            Toggle("", isOn: $isOn)
-                .labelsHidden()
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
-        .shadow(radius: 1)
-    }
-}
 
-struct InfoCard: View {
-    let title: String
-    let subtitle: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Text(title).font(.headline)
-            Text(subtitle).font(.subheadline).foregroundColor(.secondary)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
-        .shadow(radius: 1)
-    }
-}
-struct PickerCard: View {
-    @AppStorage("temperatureUnit") private var unit = "Celsius"
 
+struct PickerCard<Option:SettingOption>: View {
+    let title: String
+    @Binding var selectedOption:Option
+    
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Temperature Unit")
+            Text(title)
                 .font(.headline)
-            Picker("Unit", selection: $unit) {
-                Text("Celsius (°C)").tag("Celsius")
-                Text("Fahrenheit (°F)").tag("Fahrenheit")
-                Text("Kelvin (°K)").tag("Kelvin")
+            Picker(title, selection: $selectedOption) {
+
+                ForEach (Array(Option.allCases)
+                ){ option in
+                    Text(option.displayName).tag(option)
+                    
+                }
             }
             .pickerStyle(.segmented)
         }
@@ -84,7 +114,109 @@ struct PickerCard: View {
 }
 
 
-
-#Preview {
-    Settings()
+struct InfoCard: View {
+    let title: String
+    let subtitle: String
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 5) {
+            Text(title).font(.headline)
+            Text(subtitle).font(.subheadline).foregroundColor(.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(12)
+        .shadow(radius: 1)
+    }
 }
+
+
+
+//#Preview {
+//    let homeVM = HomeViewModel(getWeatherUseCase: UseCaseWeatherImpl(repo: RepositoryImpl(remoteDataSource: RemoteDataSourceImpl())))
+//    let settingsVM = SettingsViewModel(homeViewModel: homeVM)
+//    SettingsView(settingsViewModel: settingsVM)
+//}
+
+
+
+
+
+
+// MARK: - Protocol to for Make Options Generic
+
+protocol SettingOption: CaseIterable,Identifiable,RawRepresentable,Hashable where RawValue == String{
+    var displayName:String{get}
+}
+
+
+// MARK: - Units Enums
+enum TemperatureUnit: String, SettingOption {
+    case kelvin = "Kelvin (°K)"
+    case celsius = "Celsius (°C)"
+    case fahrenheit = "Fahrenheit (°F)"
+    
+    var id: String { rawValue }
+    var displayName: String {rawValue}
+    
+    var apiParameter: String {
+           switch self {
+           case .kelvin: return "standard"
+           case .celsius: return "metric"
+           case .fahrenheit: return "imperial"
+           }
+       }
+    
+    var displayShort: String {
+        switch self {
+        case .celsius: return "°C"
+        case .fahrenheit: return "°F"
+        case .kelvin: return "°K"
+        }
+    }
+
+}
+
+enum WindSpeedUnit: String, SettingOption {
+    case meterPerSecond = "Meter/Sec"
+    case milesPerHour = "Miles/Hour"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+    var shortName: String {
+            switch self {
+            case .meterPerSecond: return "m/s"
+            case .milesPerHour: return "mph"
+            }
+        }
+    
+}
+
+
+enum AppLanguage: String, SettingOption {
+    case english = "English"
+    case arabic = "العربية"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+    var apiParameter: String {
+            switch self {
+            case .english: return "en"
+            case .arabic: return "ar"
+            }
+        }
+}
+
+enum LocationMode: String, SettingOption {
+    case gps = "GPS"
+    case map = "Map"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+}
+

@@ -8,11 +8,38 @@
 import SwiftUI
 
 struct FAB: View {
+    var action: () -> Void
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+      
+        
+            ZStack {
+                Color(.systemBackground)
+                    .ignoresSafeArea()
+                
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        
+                        Button {
+                            action()
+                        } label: {
+                            Image(systemName: "heart.fill")
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding()
+                                .background(Color.blue)
+                                .clipShape(Circle())
+                                .shadow(radius: 6)
+                            
+                        }
+                        .padding()
+                    }
+                }
+            }
+        }
 }
 
 #Preview {
-    FAB()
+    FAB(action: {})
 }

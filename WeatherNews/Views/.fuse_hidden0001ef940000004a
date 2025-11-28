@@ -14,7 +14,7 @@ struct MapView: View {
     @EnvironmentObject var viewModel : HomeViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var isLoading = false
-    @State private var weatherTask: Task<Void, Never>?
+    
     
     var body: some View {
         
@@ -28,41 +28,22 @@ struct MapView: View {
             
             VStack {
                 Spacer()
+                VStack{
+                    
+                    if let weather = viewModel.currentWeather{
+                        
+                        Text("\(weather.sys.country.fullCountryName),\(weather.name)").font(.title3)
+                    }
+                }.foregroundColor(Color.gray)
+                Button("Select Location") {
+               
+                }.frame(maxWidth: 100)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
                 
-                VStack(spacing: 12) {
-                    
-                    if let weather = viewModel.currentWeather {
-                        Text("\(weather.sys.country.fullCountryName), \(weather.name)")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                    } else {
-                        Text("Select a location")
-                            .foregroundColor(.gray)
-                    }
-                    
-                    Button(action: getLocation) {
-                        Text("Select Location")
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                    }
-                }
-                .padding()
-                .background(.ultraThinMaterial)
-                .cornerRadius(20)
-                .shadow(radius: 10)
-                .padding()
-            }
-            
-            
-            if isLoading {
-                CircleLoading()
-          }
-
-        }.onDisappear {
-            weatherTask?.cancel()
+            }.frame(maxWidth: .infinity,maxHeight: 300).background(Color.white)
         }
     }
     
@@ -72,22 +53,18 @@ struct MapView: View {
         viewModel.savedLat = region.center.latitude
         viewModel.savedLon = region.center.longitude
         isLoading = true
-        weatherTask =     Task { @MainActor in
+        Task { @MainActor in
             await viewModel.fetchWeather(
                 latitude: viewModel.savedLat,
                 longitude: viewModel.savedLon
             )
             
             try? await Task.sleep(nanoseconds: 300_000_000)
-            isLoading = false
-            dismiss()
+                isLoading = false
+                dismiss()
             
         }
-        
-        
     }
-    
-    
 }
 
 

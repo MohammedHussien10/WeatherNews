@@ -1,18 +1,23 @@
+////
+////  RowOfFavoritesList.swift
+////  WeatherNews
+////
+////  Created by Macos on 25/11/2025.
+////
 //
-//  RowOfFavoritesList.swift
-//  WeatherNews
+//import SwiftUI
 //
-//  Created by Macos on 25/11/2025.
+//struct RowOfFavoritesList: View {
+//    var body: some View {
+//        HStack(spacing: 2){
+//            if let weather = viewModel.currentWeather{
+//                Text("\(weather.sys.country.fullCountryName)").font(.largeTitle)
+//                Text("\(weather.sys.country.fullCountryName),\(weather.name)").font(.title3)
+//            }
+//        }.background(Color.green)
+//    }
+//}
 //
-
-import SwiftUI
-
-struct RowOfFavoritesList: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    RowOfFavoritesList()
-}
+//#Preview {
+//    RowOfFavoritesList()
+//}

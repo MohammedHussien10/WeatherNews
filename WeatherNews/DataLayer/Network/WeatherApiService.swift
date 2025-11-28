@@ -15,19 +15,23 @@ protocol WeatherServiceProtocol{
 
 final class WeatherApiService{
     private let keychain = KeychainSwift()
-    func fetchCurrentWeather(latitude:Double,longitude:Double)async throws -> WeatherResponse{
+    
+    static let shared = WeatherApiService()
+    init(){}
+    
+    func fetchCurrentWeather(category:WeatherCategory,unit:String,language:String)async throws -> WeatherResponse{
         guard let apikey = keychain.get("AccessTokenWeatherKey") else {
             throw APIError.missingToken
         }
-       let urlString = "https://api.openweathermap.org/data/2.5/weather?lat=\(latitude)&lon=\(longitude)&appid=\(apikey)"
+        let urlString = "\(category.currentWeather)&appid=\(apikey)&units=\(unit)&lang=\(language)"
         return try await fetchData(from: urlString)
     }
     
-    func fetchForecast(latitude:Double,longitude:Double) async throws -> ForecastResponse {
+    func fetchForecast(category:WeatherCategory,unit:String,language:String) async throws -> ForecastResponse {
         guard let apikey = keychain.get("AccessTokenWeatherKey") else {
             throw APIError.missingToken
         }
-          let urlString = "https://api.openweathermap.org/data/2.5/forecast?lat=\(latitude)&lon=\(longitude)&appid=\(apikey)"
+        let urlString = "\(category.forecast)&appid=\(apikey)&units=\(unit)&lang=\(language)"
           return try await fetchData(from: urlString)
       }
     
