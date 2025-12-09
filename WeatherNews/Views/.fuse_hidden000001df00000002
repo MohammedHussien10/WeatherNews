@@ -1,0 +1,122 @@
+//
+//  MapView.swift
+//  WeatherNews
+//
+//  Created by Macos on 05/11/2025.
+//
+
+import SwiftUI
+import MapKit
+struct MapView: View {
+    let mode: MapMode
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.7893, longitude: 21.0936), span: MKCoordinateSpan(latitudeDelta: 80, longitudeDelta: 80))
+    let onSelect: (CLLocationCoordinate2D)->Void
+    @EnvironmentObject var homeviewModel : HomeViewModel
+    @EnvironmentObject var favoritesviewModel : FavoritesViewModel
+    @Environment(\.dismiss) private var dismiss
+    @State private var isLoading = false
+    @State private var weatherTask: Task<Void, Never>?
+    
+    var body: some View {
+        
+        ZStack {
+            Map(coordinateRegion: $region, interactionModes: .all,showsUserLocation: true).ignoresSafeArea()
+            
+            Image(systemName: "mappin.circle.fill")
+                .font(.system(size: 45))
+                .foregroundColor(.red)
+                .offset(y: -20)
+            
+            VStack {
+                Spacer()
+                
+                VStack(spacing: 12) {
+                    
+                    if let weather = homeviewModel.currentWeather {
+                        Text("\(weather.sys.country.fullCountryName), \(weather.name)")
+                            .font(.headline)
+                            .foregroundColor(.black)
+                        
+                    } else {
+                        Text("Select a location")
+                            .foregroundColor(.gray)
+                    }
+                    
+                    Button {
+                        if let weather = homeviewModel.currentWeather {
+                            getLocation(weather: weather)
+                        }
+                    } label: {
+                        Text("Select Location")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+
+                }
+                .padding()
+                .background(.ultraThinMaterial)
+                .cornerRadius(20)
+                .shadow(radius: 10)
+                .padding()
+            }
+            
+            
+            if isLoading {
+                CircleLoading()
+            }
+            
+        }.onDisappear {
+            weatherTask?.cancel()
+        }
+    }
+    
+    
+    func getLocation(){
+        let selectedCoordinate = region.center
+        let city = homeviewModel.currentWeather?.name
+        let country = homeviewModel.currentWeather?.sys.country.fullCountryName
+        isLoading = true
+        weatherTask = Task { @MainActor in
+            switch mode{
+            case .settings:
+                homeviewModel.savedLat = selectedCoordinate.latitude
+                homeviewModel.savedLon = selectedCoordinate.longitude
+                
+                
+                await homeviewModel.fetchWeather(
+                    latitude: homeviewModel.savedLat,
+                    longitude: homeviewModel.savedLon
+                )
+                
+            case.favorites:
+                let fav = FavouritesModel(id: UUID(), country: country, city: city, latitude: selectedCoordinate.latitude, longitude: selectedCoordinate.longitude)
+                await favoritesviewModel.addFavorite(place: fav)
+            }
+            onSelect(selectedCoordinate)
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            isLoading = false
+            dismiss()
+            
+        }
+        
+    }
+}
+
+
+
+
+
+struct Location: Identifiable {
+    let id = UUID()
+    let name: String
+    let coordinate: CLLocationCoordinate2D
+}
+
+
+enum MapMode {
+    case favorites
+    case settings
+}

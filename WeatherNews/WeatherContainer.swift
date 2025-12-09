@@ -11,6 +11,7 @@ import CoreData
 
 struct WeatherContainer: View {
     @EnvironmentObject var homeViewModel: HomeViewModel
+    @EnvironmentObject var favoritesViewModel: FavoritesViewModel
     var body: some View {
         TabView() {
 

@@ -77,12 +77,11 @@ struct SettingsView: View {
             }
             .padding()
         }
-        .background(
-            NavigationLink(destination: MapView(), isActive: $showMap) { EmptyView() }
-                       .hidden()
-               )
-        
-        .navigationTitle("Settings")
+        .navigationDestination(isPresented:$showMap){
+            MapView(mode:.settings){coordinate in
+                
+            }
+        }.navigationTitle("Settings")
     }
 }
 

@@ -7,22 +7,29 @@
 
 import SwiftUI
 struct Favorites: View {
+    @EnvironmentObject var viewModel: FavoritesViewModel
     @State private var showMap = false
     var body: some View {
         NavigationStack {
-            VStack{
-              
+            ZStack{
+                RowOfFavoritesList().environmentObject(viewModel)
                 
                 FAB{
                     showMap = true
                 }
-            }
-        } .navigationDestination(isPresented: $showMap) {
-            MapView()
+            }.navigationTitle("Favorites")
+                .task {
+                    await viewModel.loadFavorites()
+                }
+                .navigationDestination(isPresented: $showMap) {
+                    MapView(mode: .favorites) { ـ in
+                        
+                    }.environmentObject(viewModel)
+                    
+                }
         }
     }
 }
-
 #Preview {
     Favorites()
 }

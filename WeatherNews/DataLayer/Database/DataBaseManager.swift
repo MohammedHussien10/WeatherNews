@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 final class DataBaseManager{
-    static let dataBaseManager = DataBaseManager()
+    static let shared = DataBaseManager()
     
     lazy var container: NSPersistentContainer = {
         
@@ -53,7 +53,7 @@ final class DataBaseManager{
     }
     
     func deleteFromFavouries(placeId:UUID) async throws {
-//        let request = WeatherEntity.fetchRequest()
+
         let request:NSFetchRequest<WeatherEntity> = WeatherEntity.fetchRequest()
         request.predicate = NSPredicate(format: "id == %@", placeId as CVarArg)
         request.fetchLimit = 1
