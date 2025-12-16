@@ -9,7 +9,10 @@ import SwiftUI
 import Kingfisher
 
 struct NextFiveDays: View {
-    @EnvironmentObject var viewModel: HomeViewModel
+    let forecast: [ForecastItem]?
+    let timezone: Int
+    let temperatureUnit: TemperatureUnit
+    private let helper: HelperWeatherDetails = HelperWeatherDetails()
     
     var body: some View {
             VStack(alignment: .leading, spacing: 12) {
@@ -21,27 +24,26 @@ struct NextFiveDays: View {
                 
                 ScrollView(.vertical,showsIndicators: false){
                     
-                if let forecastList = viewModel.forecast?.list {
-                    ForEach(viewModel.getNextFiveDays(list: forecastList), id: \.dt) { forecast in
+                    if let forecastList = forecast {
+                    ForEach(helper.getNextFiveDays(list: forecastList), id: \.dt) { item in
                         HStack(spacing: 16) {
-                            Text(viewModel.formattedDate(from: forecast.dt,
-                                                         timezone: viewModel.forecast?.city.timezone ?? 0))
+                            Text(helper.formattedDate(from: item.dt,
+                                                         timezone: timezone))
                             .font(.headline)
                             .foregroundColor(.white)
                             
                             Spacer()
                         
-                            if let icon = forecast.weather.first?.icon {
+                            if let icon = item.weather.first?.icon {
                                 KFImage(icon.weatherIconURL)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 40, height: 40)
                             }
-                            
-                            Text(String(format: "%.0f %@", forecast.main.temp,
-                                        viewModel.temperatureUnit.displayShort))
-                            .font(.headline)
-                            .foregroundColor(.white)
+
+                            Text(
+                                String(format: "%.0f %@", item.main.temp, temperatureUnit.displayShort)
+                            )
                         }
                         .padding()
                         .background(Color.white.opacity(0.2))
@@ -59,6 +61,6 @@ struct NextFiveDays: View {
 
 
 
-#Preview {
-    NextFiveDays()
-}
+//#Preview {
+//    NextFiveDays()
+//}

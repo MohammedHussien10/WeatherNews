@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-final class HomeViewModel:ObservableObject {
+final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @Published var currentWeather : WeatherResponse?
     @Published var forecast : ForecastResponse?
     @Published var windSpeedConverter : Double?
@@ -39,6 +39,7 @@ final class HomeViewModel:ObservableObject {
     
     
     private let getWeatherUseCase: UseCaseWeather
+    private let helper: HelperWeatherDetails = HelperWeatherDetails()
     init(getWeatherUseCase: UseCaseWeather) {
         self.getWeatherUseCase = getWeatherUseCase
     }
@@ -61,9 +62,61 @@ final class HomeViewModel:ObservableObject {
             self.errorMessage = error.localizedDescription
         }
         isLoading = false
-        windSpeedConverter = convertWindSpeed(currentWeather?.wind.speed ?? 0.0, from: temperatureUnit, to: windSpeedUnit)
+        windSpeedConverter = helper.convertWindSpeed(currentWeather?.wind.speed ?? 0.0, from: temperatureUnit, to: windSpeedUnit)
     }
     
+    
+  
+    
+    func refetchWindSpeed() {
+        guard let speed = currentWeather?.wind.speed else { return }
+        windSpeedConverter = helper.convertWindSpeed(speed, from: temperatureUnit, to: windSpeedUnit)
+    }
+    
+
+        func formattedTime(from timestamp: Int, timezone: Int) -> String {
+            helper.formattedTime(from: timestamp, timezone: timezone)
+        }
+
+        func formattedDate(from timestamp: Int, timezone: Int) -> String {
+            helper.formattedDate(from: timestamp, timezone: timezone)
+        }
+
+        func getNextFiveDays(list: [ForecastItem]) -> [ForecastItem] {
+            helper.getNextFiveDays(list: list)
+        }
+    
+    
+}
+
+
+
+struct HelperWeatherDetails {
+    
+    func getNextFiveDays (list:[ForecastItem]) -> [ForecastItem]{
+        var result : [ForecastItem] = []
+        var addedDates:Set<String> = []
+        for item in list{
+            let date = Date(timeIntervalSince1970: TimeInterval(item.dt))
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyy-MM-dd"
+            let dayString = formatter.string(from: date)
+    
+            if Calendar.current.isDate(date, inSameDayAs: Date() ){
+                continue
+            }
+            
+            if !addedDates.contains(dayString){
+                addedDates.insert(dayString)
+                result.append(item)
+            }
+            
+            if result.count >= 6 {break}
+        }
+        return result
+        
+    }
+
     
     //Convert dt to Real Time Date
     
@@ -116,34 +169,4 @@ final class HomeViewModel:ObservableObject {
     }
 
     
-    func refetchWindSpeed() {
-        guard let speed = currentWeather?.wind.speed else { return }
-        windSpeedConverter = convertWindSpeed(speed, from: temperatureUnit, to: windSpeedUnit)
-    }
-    
-    func getNextFiveDays (list:[ForecastItem]) -> [ForecastItem]{
-        var result : [ForecastItem] = []
-        var addedDates:Set<String> = []
-        for item in list{
-            let date = Date(timeIntervalSince1970: TimeInterval(item.dt))
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyy-MM-dd"
-            let dayString = formatter.string(from: date)
-    
-            if Calendar.current.isDate(date, inSameDayAs: Date() ){
-                continue
-            }
-            
-            if !addedDates.contains(dayString){
-                addedDates.insert(dayString)
-                result.append(item)
-            }
-            
-            if result.count >= 6 {break}
-        }
-        return result
-        
-    }
-
-
 }

@@ -8,19 +8,22 @@
 import SwiftUI
 import Kingfisher
 struct GeneralDetails: View {
-    @EnvironmentObject var viewModel: HomeViewModel
-    
+    let currentWeather: WeatherResponse?
+    let windSpeedConverter: Double?
+    let temperatureUnit: TemperatureUnit
+    let windSpeedUnit: WindSpeedUnit
+    private let helper: HelperWeatherDetails = HelperWeatherDetails()
     var body: some View {
         VStack(alignment:.center){
             HStack{
-                if let weather = viewModel.currentWeather{
+                if let weather = currentWeather{
                     Text(weather.weather.first?.description ?? "")
                     weatherIcon(weather.weather.first?.icon.weatherIconURL)
                     VStack{
                         Text("Today").font(.headline)
-                        Text(viewModel.formattedDate(from: weather.dt, timezone: weather.timezone)  )
-                        Text(viewModel.formattedTime(from: weather.dt, timezone: weather.timezone)  )
-                        Text(String(format: "%.1f %@", viewModel.windSpeedConverter ?? 0.0, viewModel.windSpeedUnit.shortName))
+                        Text(helper.formattedDate(from: weather.dt, timezone: weather.timezone)  )
+                        Text(helper.formattedTime(from: weather.dt, timezone: weather.timezone)  )
+                        Text(String(format: "%.1f %@", windSpeedConverter ?? 0.0, windSpeedUnit.shortName))
                         
                     }
                     
@@ -29,8 +32,8 @@ struct GeneralDetails: View {
             }
             
             VStack(spacing: 16){
-                if let weather = viewModel.currentWeather{
-                    Text(String(format: "%.0f %@", weather.main.temp, viewModel.temperatureUnit.displayShort))
+                if let weather = currentWeather{
+                    Text(String(format: "%.0f %@", weather.main.temp, temperatureUnit.displayShort))
                         .font(.largeTitle)
                     Text("\(weather.sys.country.fullCountryName),\(weather.name)").font(.title3)
                 }
@@ -41,9 +44,11 @@ struct GeneralDetails: View {
     }
 }
 
-#Preview {
-    GeneralDetails()
-}
+//#Preview {
+//    GeneralDetails()
+//}
+
+
 
 // for Weather icon
 extension String {
@@ -72,4 +77,3 @@ extension String {
         return Locale.current.localizedString(forRegionCode: self) ?? self
     }
 }
-

@@ -13,7 +13,7 @@ struct MapView: View {
     @EnvironmentObject var homeviewModel : HomeViewModel
     @EnvironmentObject var favoritesviewModel : FavoritesViewModel
     @Environment(\.dismiss) private var dismiss
-    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.7893, longitude: 21.0936), span: MKCoordinateSpan(latitudeDelta: 30, longitudeDelta: 30))
+    @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.7893, longitude: 21.0936), span: MKCoordinateSpan(latitudeDelta: 50, longitudeDelta: 50))
     @State private var isLoading = false
     @State private var weatherTask: Task<Void, Never>?
     

@@ -6,14 +6,19 @@
 //
 
 import Foundation
+import SwiftUI
 
 final class FavoritesViewModel:ObservableObject{
     @Published var favorites:[FavouritesModel] = []
-    
-    private let getWeatherUseCase: UseCaseWeather
+
+     let getWeatherUseCase: UseCaseWeather
     init(getWeatherUseCase: UseCaseWeather) {
         self.getWeatherUseCase = getWeatherUseCase
     }
+    
+
+
+    
     @MainActor
     func loadFavorites() async{
         do{ favorites = try await getWeatherUseCase.getFavouritesDataWeather()

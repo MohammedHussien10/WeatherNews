@@ -12,7 +12,18 @@ struct RowOfFavoritesList: View {
     var body: some View {
         List {
             ForEach(viewModel.favorites){ place in
-                NavigationLink(destination:WeatherDetailsScreen(place:place) ){
+                NavigationLink {
+                    let vm = HomeViewModel(getWeatherUseCase: viewModel.getWeatherUseCase)
+
+                    WeatherDetailsView(viewModel: vm)
+                        .task {
+                            await vm.fetchWeather(
+                                latitude: place.latitude,
+                                longitude: place.longitude
+                            )
+                        }
+
+                } label: {
                     VStack(alignment: .leading) {
                         Text(place.city)
                             .font(.headline)
@@ -21,6 +32,7 @@ struct RowOfFavoritesList: View {
                             .foregroundColor(.gray)
                     }
                 }
+
             }.onDelete{ indexSet in
                 if let index = indexSet.first{
                     let id = viewModel.favorites[index].id
@@ -38,22 +50,4 @@ struct RowOfFavoritesList: View {
     
     
    
-}
-struct WeatherDetailsScreen: View {
-    let place: FavouritesModel
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            Text(place.city)
-                .font(.largeTitle)
-            Text(place.country)
-            
-            Text("Lat: \(place.latitude)")
-            Text("Lon: \(place.longitude)")
-            
-            Spacer()
-        }
-        .padding()
-        .navigationTitle("Weather Details")
-    }
 }
