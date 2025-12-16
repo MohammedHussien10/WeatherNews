@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct WeatherDetailsView: View {
     @EnvironmentObject var viewModel: HomeViewModel
     
     var body: some View {
@@ -29,5 +29,17 @@ struct HomeView: View {
 
 
 #Preview {
-    HomeView()
+    WeatherDetailsView()
+}
+
+
+protocol WeatherPresentable {
+    var timezone: Int { get }
+    var dt: Int { get }
+    var temp: Double { get }
+    var description: String { get }
+    var icon: String { get }
+    var city: String { get }
+    var country: String { get }
+    var windSpeed: Double { get }
 }
