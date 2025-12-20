@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import MapKit
 final class FavoritesViewModel:ObservableObject{
     @Published var favorites:[FavouritesModel] = []
 
@@ -44,6 +44,40 @@ final class FavoritesViewModel:ObservableObject{
              print("Error deleting favorite: \(error)")
          }
      }
+    
+    func resolveFallbackCityAndCountryIfNeeded(lat: Double, long: Double) async{
+        var cityName = "Unknown"
+        var countryName = "Unknown"
+        
+        let location = CLLocation(latitude: lat, longitude: long)
+        let geocoder = CLGeocoder()
+        if Task.isCancelled { return }
+        do{
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+            if let placemark = placemarks.first{
+                cityName = placemark.locality ?? placemark.subAdministrativeArea  ?? "Unknown"
+                countryName = placemark.country ?? "Unknown"
+                
+            }
+        }catch{
+            print("Reverse geocoding failed: \(error)")
+        }
+        
+        let fav = FavouritesModel(id: UUID(), country: countryName, city: cityName, latitude: lat, longitude: long)
+        
+        
+        let isDuplicate = favorites.contains{ existing in
+            abs(existing.latitude - fav.latitude) < 0.0001 &&
+            abs(existing.longitude - fav.longitude) < 0.0001
+            
+        }
+        if !isDuplicate{
+            if Task.isCancelled { return }
+            await addFavorite(place: fav)
+        }else {
+            print("Favorite already exists!")
+        }
+    }
     
     
 }

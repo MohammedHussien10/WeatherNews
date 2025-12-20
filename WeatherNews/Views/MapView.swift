@@ -113,7 +113,6 @@ struct MapView: View {
                 homeviewModel.savedLon = selectedCoordinate.longitude
                 
                 if Task.isCancelled { return }
-                homeviewModel.fallbackCityName = nil
                 await homeviewModel.fetchWeather(
                     latitude: homeviewModel.savedLat,
                     longitude: homeviewModel.savedLon
@@ -121,40 +120,7 @@ struct MapView: View {
               
 
             case.favorites:
-                var cityName = "Unknown"
-                var countryName = "Unknown"
-                
-                let location = CLLocation(latitude: selectedCoordinate.latitude, longitude: selectedCoordinate.longitude)
-                let geocoder = CLGeocoder()
-                if Task.isCancelled { return }
-                do{
-                    let placemarks = try await geocoder.reverseGeocodeLocation(location)
-                    if let placemark = placemarks.first{
-                        cityName = placemark.locality ?? placemark.subAdministrativeArea  ?? "Unknown"
-                        countryName = placemark.country ?? "Unknown"
-                        
-                    }
-                }catch{
-                    print("Reverse geocoding failed: \(error)")
-                }
-                
-                
-                
-                
-                let fav = FavouritesModel(id: UUID(), country: countryName, city: cityName, latitude: selectedCoordinate.latitude, longitude: selectedCoordinate.longitude)
-                
-                
-                let isDuplicate = favoritesviewModel.favorites.contains{ existing in
-                    abs(existing.latitude - fav.latitude) < 0.0001 &&
-                    abs(existing.longitude - fav.longitude) < 0.0001
-                    
-                }
-                if !isDuplicate{
-                    if Task.isCancelled { return }
-                    await favoritesviewModel.addFavorite(place: fav)
-                }else {
-                    print("Favorite already exists!")
-                }
+                await favoritesviewModel.resolveFallbackCityAndCountryIfNeeded(lat: selectedCoordinate.latitude, long: selectedCoordinate.longitude)
                 
                 
             }
