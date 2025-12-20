@@ -13,6 +13,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @Published var windSpeedConverter : Double?
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var fallbackCityName: String?
     @AppStorage("savedLat") var savedLat: Double = 30.0444
     @AppStorage("savedLon") var savedLon: Double = 31.2357
     @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue

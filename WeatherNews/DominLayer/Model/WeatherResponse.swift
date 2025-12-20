@@ -8,7 +8,7 @@ import Foundation
 
 struct WeatherResponse:Codable{
     let id: Int
-    let name:String
+    let name:String?
     let main:Main
     let dt:Int
     let coord:Coord
@@ -48,7 +48,7 @@ struct Clouds:Codable{
     let all:Int
 }
 struct Sys: Codable {
-    let country: String
+    let country: String?
 }
 
 

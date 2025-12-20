@@ -25,6 +25,7 @@ final class FavoritesViewModel:ObservableObject{
         }catch{
             print("Error loading favorites: \(error)")
         }
+        print("\(favorites)all favouries")
     }
     
     func addFavorite(place: FavouritesModel) async {

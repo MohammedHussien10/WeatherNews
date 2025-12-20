@@ -70,11 +70,21 @@ struct MapView: View {
     private func getLocationName() -> String {
         switch mode {
         case .settings:
-            if let weather = homeviewModel.currentWeather{
-                return "\(weather.sys.country.fullCountryName), \(weather.name)"
-            } else {
+            
+            guard let weather = homeviewModel.currentWeather else {
                 return "Select a location"
             }
+            
+            let country = weather.sys.country?.fullCountryName ?? "Unknown Country"
+
+                let city: String
+            if let name = weather.name, !name.isEmpty {
+                    city = name
+                } else {
+                    city = homeviewModel.fallbackCityName ?? "Unknown City"
+                }
+
+                return "\(country), \(city)"
         case .favorites:
             return "Select a location"
         }
@@ -108,6 +118,26 @@ struct MapView: View {
                     latitude: homeviewModel.savedLat,
                     longitude: homeviewModel.savedLon
                 )
+                if homeviewModel.currentWeather?.name?.isEmpty == true {
+                    let location = CLLocation(
+                        latitude: selectedCoordinate.latitude,
+                        longitude: selectedCoordinate.longitude
+                    )
+                    let geocoder = CLGeocoder()
+                    
+                    do {
+                        let placemarks = try await geocoder.reverseGeocodeLocation(location)
+                        if let placemark = placemarks.first {
+                            homeviewModel.fallbackCityName =
+                            placemark.locality ??
+                            placemark.subAdministrativeArea ??
+                            placemark.country ??
+                            "Unknown Place"
+                        }
+                    } catch {
+                        print("Fallback reverse geocoding failed:", error)
+                    }
+                }
                 
             case.favorites:
                 var cityName = "Unknown"

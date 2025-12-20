@@ -35,7 +35,22 @@ struct GeneralDetails: View {
                 if let weather = currentWeather{
                     Text(String(format: "%.0f %@", weather.main.temp, temperatureUnit.displayShort))
                         .font(.largeTitle)
-                    Text("\(weather.sys.country.fullCountryName),\(weather.name)").font(.title3)
+                    let locationName: String = {
+                        if let name = weather.name, !name.isEmpty,
+                           let country = weather.sys.country?.fullCountryName {
+                            return "\(country), \(name)"
+                        }
+                        if let country = weather.sys.country?.fullCountryName {
+                            return country
+                        }
+                        return "Unknown"
+                    }()
+
+                    Text(locationName)
+                        .font(.title3)
+
+
+
                 }
             }
             
