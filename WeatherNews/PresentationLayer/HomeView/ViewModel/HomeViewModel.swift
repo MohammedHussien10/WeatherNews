@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import MapKit
 final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @Published var currentWeather : WeatherResponse?
     @Published var forecast : ForecastResponse?
@@ -14,6 +15,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var fallbackCityName: String?
+    @Published var fallbackCountryName: String?
     @AppStorage("savedLat") var savedLat: Double = 30.0444
     @AppStorage("savedLon") var savedLon: Double = 31.2357
     @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue
@@ -51,6 +53,8 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
         let appLanguage = language.apiParameter
         isLoading = true
         errorMessage = nil
+        fallbackCityName = nil
+        fallbackCountryName = nil
         do{
             async let currentWeatherData = try getWeatherUseCase.getCurrentWeather(category: .latandLong(latitude, longitude),unit:unitTemp,language:appLanguage)
             async let forecastData = try getWeatherUseCase.getForecast(category: .latandLong(latitude, longitude),unit:unitTemp,language:appLanguage)
@@ -59,6 +63,12 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             
             self.currentWeather = weatherResponse
             self.forecast = forecastResponse
+            
+            await resolveFallbackCityAndCountryIfNeeded(
+                latitude: latitude,
+                longitude: longitude
+            )
+
         }catch{
             self.errorMessage = error.localizedDescription
         }
@@ -86,6 +96,25 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
         func getNextFiveDays(list: [ForecastItem]) -> [ForecastItem] {
             helper.getNextFiveDays(list: list)
         }
+    
+    @MainActor
+    func resolveFallbackCityAndCountryIfNeeded(latitude: Double, longitude: Double) async {
+        let needsFallback = currentWeather?.name?.isEmpty ?? true
+        guard needsFallback else { return }
+        
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        let geocoder = CLGeocoder()
+
+        do {
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+            if let placemark = placemarks.first {
+                fallbackCityName = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.country ?? "Unknown"
+                fallbackCountryName = placemark.country ?? "Unknown"
+            }
+        } catch {
+            print("Reverse geocoding failed:", error)
+        }
+    }
     
     
 }

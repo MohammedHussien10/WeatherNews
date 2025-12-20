@@ -19,7 +19,9 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                         currentWeather: viewModel.currentWeather,
                         windSpeedConverter: viewModel.windSpeedConverter,
                         temperatureUnit: viewModel.temperatureUnit,
-                        windSpeedUnit: viewModel.windSpeedUnit
+                        windSpeedUnit: viewModel.windSpeedUnit,
+                        fallbackCityName: viewModel.fallbackCityName,
+                        fallbackCountryName: viewModel.fallbackCountryName
                     )
                     HourlyDetails(
                         forecast: viewModel.forecast?.list,
@@ -40,7 +42,12 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                 
                 
             }
-        }.navigationBarTitleDisplayMode(.inline)
+        }.navigationBarTitleDisplayMode(.inline).onAppear {
+            print("API city:", viewModel.currentWeather?.name ?? "nil")
+            print("API country:", viewModel.currentWeather?.sys.country ?? "nil")
+            print("Fallback:", viewModel.fallbackCityName ?? "nil")
+        }
+
     }
   
     }
@@ -60,4 +67,6 @@ protocol WeatherDetailsVMProtocol: ObservableObject {
     var temperatureUnit: TemperatureUnit { get }
     var windSpeedUnit: WindSpeedUnit { get }
     var isLoading: Bool { get }
+    var fallbackCityName: String? { get }
+    var fallbackCountryName: String? { get }
 }

@@ -12,6 +12,8 @@ struct GeneralDetails: View {
     let windSpeedConverter: Double?
     let temperatureUnit: TemperatureUnit
     let windSpeedUnit: WindSpeedUnit
+    let fallbackCityName: String?
+    let fallbackCountryName: String?
     private let helper: HelperWeatherDetails = HelperWeatherDetails()
     var body: some View {
         VStack(alignment:.center){
@@ -31,16 +33,24 @@ struct GeneralDetails: View {
                 
             }
             
-            VStack(spacing: 16){
-                if let weather = currentWeather{
-                    Text(String(format: "%.0f %@", weather.main.temp, temperatureUnit.displayShort))
-                        .font(.largeTitle)
+            VStack(spacing: 16) {
+                if let weather = currentWeather {
+                    Text(
+                        String(format: "%.0f %@", weather.main.temp, temperatureUnit.displayShort)
+                    )
+                    .font(.largeTitle)
+
+                    let country = (weather.sys.country?.isEmpty == false) ? weather.sys.country?.fullCountryName : fallbackCountryName
+                    let city = (weather.name?.isEmpty == false) ? weather.name: fallbackCityName
+
                     let locationName: String = {
-                        if let name = weather.name, !name.isEmpty,
-                           let country = weather.sys.country?.fullCountryName {
-                            return "\(country), \(name)"
+                        if let city, let country {
+                            return "\(city), \(country)"
                         }
-                        if let country = weather.sys.country?.fullCountryName {
+                        if let city {
+                            return city
+                        }
+                        if let country {
                             return country
                         }
                         return "Unknown"
@@ -48,13 +58,9 @@ struct GeneralDetails: View {
 
                     Text(locationName)
                         .font(.title3)
-
-
-
                 }
             }
-            
-     
+   
         }
     }
 }

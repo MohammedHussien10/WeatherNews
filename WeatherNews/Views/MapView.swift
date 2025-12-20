@@ -76,7 +76,6 @@ struct MapView: View {
             }
             
             let country = weather.sys.country?.fullCountryName ?? "Unknown Country"
-
                 let city: String
             if let name = weather.name, !name.isEmpty {
                     city = name
@@ -114,31 +113,13 @@ struct MapView: View {
                 homeviewModel.savedLon = selectedCoordinate.longitude
                 
                 if Task.isCancelled { return }
+                homeviewModel.fallbackCityName = nil
                 await homeviewModel.fetchWeather(
                     latitude: homeviewModel.savedLat,
                     longitude: homeviewModel.savedLon
                 )
-                if homeviewModel.currentWeather?.name?.isEmpty == true {
-                    let location = CLLocation(
-                        latitude: selectedCoordinate.latitude,
-                        longitude: selectedCoordinate.longitude
-                    )
-                    let geocoder = CLGeocoder()
-                    
-                    do {
-                        let placemarks = try await geocoder.reverseGeocodeLocation(location)
-                        if let placemark = placemarks.first {
-                            homeviewModel.fallbackCityName =
-                            placemark.locality ??
-                            placemark.subAdministrativeArea ??
-                            placemark.country ??
-                            "Unknown Place"
-                        }
-                    } catch {
-                        print("Fallback reverse geocoding failed:", error)
-                    }
-                }
-                
+              
+
             case.favorites:
                 var cityName = "Unknown"
                 var countryName = "Unknown"
