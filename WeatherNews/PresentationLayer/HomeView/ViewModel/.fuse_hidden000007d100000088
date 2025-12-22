@@ -119,15 +119,9 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @MainActor
     func fetchWeatherUsingGPS() async {
         do{
-            let coordinate = try await locationService.requestCurrentLocation()
-            
-            savedLat = coordinate.latitude
-            savedLon = coordinate.longitude
-            
-            await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
             
         }catch{
-            print("GPS error:", error.localizedDescription)
+            
         }
     }
     

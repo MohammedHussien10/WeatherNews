@@ -75,7 +75,7 @@ struct MapView: View {
                 return "Select a location"
             }
             
-            let country = weather.sys.country?.fullCountryName ?? "Unknown Country"
+            let country = weather.sys.country?.fullCountryName ?? homeviewModel.fallbackCountryName ?? "Unknown Country"
                 let city: String
             if let name = weather.name, !name.isEmpty {
                     city = name

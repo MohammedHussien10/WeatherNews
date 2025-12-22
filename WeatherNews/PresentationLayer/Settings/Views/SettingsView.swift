@@ -12,9 +12,11 @@ struct SettingsView: View {
     @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue
     @AppStorage("windSpeedUnit") private var windSpeedUnitRawValue: String = WindSpeedUnit.meterPerSecond.rawValue
     @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
-
-
-    @State private var location: LocationMode = .gps
+    @AppStorage("locationMode") private var locationRawValue: String = LocationMode.gps.rawValue
+    private var location: LocationMode {
+        get { LocationMode(rawValue: locationRawValue) ?? .gps }
+        set { locationRawValue = newValue.rawValue }
+    }
     @State private var showMap = false
     @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
@@ -64,12 +66,30 @@ struct SettingsView: View {
                     Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
                                                             longitude: homeViewModel.savedLon) }
                 }
-                PickerCard(title: "Location Mode", selectedOption: $location).onChange(of: location){
-                    value in
-                    if value == .map{
-                        showMap = true
-                    }
-                }
+                PickerCard(
+                    title: "Location Mode",
+                    selectedOption: Binding(
+                        get: {
+                            LocationMode(rawValue: locationRawValue) ?? .gps
+                        },
+                        set: { newValue in
+                            locationRawValue = newValue.rawValue
+                            
+                            if newValue == .gps {
+                                Task{
+                                    await homeViewModel.fetchWeatherUsingGPS()
+                                }
+                            }
+                            
+                            
+                            if newValue == .map {
+                                showMap = true
+                            }
+                        }
+                    )
+                )
+
+
                 InfoCard(title: "About App", subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien")
 
                 
@@ -79,7 +99,7 @@ struct SettingsView: View {
         }
         .navigationDestination(isPresented:$showMap){
             MapView(mode:.settings){coordinate in
-                
+                locationRawValue = LocationMode.gps.rawValue
             }
         }.navigationTitle("Settings")
     }
