@@ -11,46 +11,63 @@ struct Alerts: View {
     @StateObject var viewModel = AlertsViewModel()
     @State private var showAddAlert = false
     var body: some View {
-        List {
-            ForEach(viewModel.alerts) { alert in
-                HStack {
-                    VStack(alignment: .leading) {
-                                          Text(alert.city)
-                                          Text(alert.type.rawValue.capitalized)
-                                              .font(.caption)
-                                      }
-                    
-                    Spacer()
-                    if alert.isActive {
-                        Button("Stop") {
-                            viewModel.stopAlert(id: alert.id)
-                        }.foregroundColor(.red)
+        Group{
+            
+            if viewModel.alerts.isEmpty {
+                ContentUnavailableView(
+                    "No Alerts",
+                    systemImage: "bell",
+                    description: Text("Tap + to add a weather alert")
+                )
+            } else {
+                
+                
+                
+                List {
+                    ForEach(viewModel.alerts.sorted {
+                        $0.isActive && !$1.isActive
+                    }) { alert in
+                        
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(alert.city)
+                                Text(alert.type.rawValue.capitalized)
+                                    .font(.caption)
+                            }
+                            
+                            Spacer()
+                            if alert.isActive {
+                                Button("Stop") {
+                                    viewModel.stopAlert(id: alert.id)
+                                }.tint(.red)
+                            }
+                        }
+                        
+                        
+                        
                     }
                 }
-                
-                
-                
             }
         }.navigationTitle("Weather Alerts")
             .toolbar {
-                      Button {
-                          showAddAlert = true
-                      } label: {
-                          Image(systemName: "plus")
-                      }
-                  } .sheet(isPresented: $showAddAlert) {
-                      AddAlertView { city, start, end, type in
-                          viewModel.addAlert(
-                              city: city,
-                              start: start,
-                              end: end,
-                              type: type
-                          )
-                      }
-                  }
-                  .task {
-                      await AlertManager.shared.requestPermission()
-                  }
+                Button {
+                    showAddAlert = true
+                } label: {
+                    Image(systemName: "plus")
+                }
+            } .sheet(isPresented: $showAddAlert) {
+                AddAlertView { city, start, end, type in
+                    viewModel.addAlert(
+                        city: city,
+                        start: start,
+                        end: end,
+                        type: type
+                    )
+                }
+            }
+            .task {
+                await AlertManager.shared.requestPermission()
+            }
     }
     
     
