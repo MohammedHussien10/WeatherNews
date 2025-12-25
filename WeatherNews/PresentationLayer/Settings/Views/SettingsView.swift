@@ -12,11 +12,7 @@ struct SettingsView: View {
     @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue
     @AppStorage("windSpeedUnit") private var windSpeedUnitRawValue: String = WindSpeedUnit.meterPerSecond.rawValue
     @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
-    @AppStorage("locationMode") private var locationRawValue: String = LocationMode.gps.rawValue
-    private var location: LocationMode {
-        get { LocationMode(rawValue: locationRawValue) ?? .gps }
-        set { locationRawValue = newValue.rawValue }
-    }
+    @AppStorage("locationMode") private var locationRawValue: String = LocationMode.none.rawValue
     @State private var showMap = false
     @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
@@ -49,7 +45,7 @@ struct SettingsView: View {
                     Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
                                                             longitude: homeViewModel.savedLon) }
                 }
-
+                
                 
                 
                 PickerCard(title: "Wind Speed Unit", selectedOption: Binding(
@@ -58,7 +54,7 @@ struct SettingsView: View {
                 )).onChange(of: windSpeedUnitRawValue) { _ in
                     homeViewModel.refetchWindSpeed()
                 }
-
+                
                 PickerCard(title: "Language", selectedOption: Binding(
                     get: { AppLanguage(rawValue: languageRawValue) ?? .english },
                     set: { languageRawValue = $0.rawValue }
@@ -66,176 +62,134 @@ struct SettingsView: View {
                     Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
                                                             longitude: homeViewModel.savedLon) }
                 }
-                PickerCard(
-                    title: "Location Mode",
-                    selectedOption: Binding(
-                        get: {
-                            LocationMode(rawValue: locationRawValue) ?? .gps
-                        },
-                        set: { newValue in
-                            locationRawValue = newValue.rawValue
-                            
-                            if newValue == .gps {
-                                Task{
-                                    await homeViewModel.fetchWeatherUsingGPS()
-                                }
-                            }
-                            
-                            
-                            if newValue == .map {
-                                showMap = true
-                            }
+                VStack(spacing: 16) {
+                    
+                    Toggle("Use GPS Location", isOn: Binding(
+                        get: { locationRawValue == LocationMode.gps.rawValue },
+                        set: { isOn in
+                                   locationRawValue = isOn ? LocationMode.gps.rawValue : LocationMode.none.rawValue
+                               }
+                    ))
+                    
+                    Toggle("Use Map Location", isOn: Binding(
+                        get: { locationRawValue == LocationMode.map.rawValue },
+                        set: { isOn in
+                                 locationRawValue = isOn ? LocationMode.map.rawValue : LocationMode.none.rawValue
+                             }
+                    ))
+                    
+                }.cardStyle().onChange(of: locationRawValue) { mode in
+                    let resolvedMode = LocationMode(rawValue: mode) ?? .gps
+                    locationRawValue = resolvedMode.rawValue
+                    
+                    switch resolvedMode {
+                    case .none:
+                           break
+                    case .gps:
+                        Task { await homeViewModel.fetchWeatherUsingGPS() }
+                        
+                    case .map:
+                        if !showMap {
+                            showMap = true
                         }
-                    )
-                )
-
-
-                InfoCard(title: "About App", subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien")
-
-                
-                
-            }
-            .padding()
-        }
-        .navigationDestination(isPresented:$showMap){
-            MapView(mode:.settings){coordinate in
-                locationRawValue = LocationMode.gps.rawValue
-            }
-        }.navigationTitle("Settings")
-    }
-}
-
-
-
-struct PickerCard<Option:SettingOption>: View {
-    let title: String
-    @Binding var selectedOption:Option
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text(title)
-                .font(.headline)
-            Picker(title, selection: $selectedOption) {
-
-                ForEach (Array(Option.allCases)
-                ){ option in
-                    Text(option.displayName).tag(option)
+                        
+                    }
+                    
                     
                 }
+                    
+                    
+                    
+                    
+                    InfoCard(title: "About App", subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien")
+                    
+                    
+                    
+                }
+                .padding()
             }
-            .pickerStyle(.segmented)
+            .navigationDestination(isPresented: $showMap) {
+                MapView(mode: .settings) { coordinate in
+                    locationRawValue = LocationMode.map.rawValue
+                    Task {
+                        await homeViewModel.fetchWeather(
+                            latitude: coordinate.latitude,
+                            longitude: coordinate.longitude
+                        )
+                    }
+                }
+                
+            }
+            .navigationTitle("Settings")
         }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
-        .shadow(radius: 1)
     }
-}
-
-
-struct InfoCard: View {
-    let title: String
-    let subtitle: String
     
-    var body: some View {
+    
+    
+    struct PickerCard<Option:SettingOption>: View {
+        let title: String
+        @Binding var selectedOption:Option
         
-        VStack(alignment: .leading, spacing: 5) {
-            Text(title).font(.headline)
-            Text(subtitle).font(.subheadline).foregroundColor(.secondary)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
-        .shadow(radius: 1)
-    }
-}
-
-
-
-//#Preview {
-//    let homeVM = HomeViewModel(getWeatherUseCase: UseCaseWeatherImpl(repo: RepositoryImpl(remoteDataSource: RemoteDataSourceImpl())))
-//    let settingsVM = SettingsViewModel(homeViewModel: homeVM)
-//    SettingsView(settingsViewModel: settingsVM)
-//}
-
-
-
-
-
-
-// MARK: - Protocol to for Make Options Generic
-
-protocol SettingOption: CaseIterable,Identifiable,RawRepresentable,Hashable where RawValue == String{
-    var displayName:String{get}
-}
-
-
-// MARK: - Units Enums
-enum TemperatureUnit: String, SettingOption {
-    case kelvin = "Kelvin (°K)"
-    case celsius = "Celsius (°C)"
-    case fahrenheit = "Fahrenheit (°F)"
-    
-    var id: String { rawValue }
-    var displayName: String {rawValue}
-    
-    var apiParameter: String {
-           switch self {
-           case .kelvin: return "standard"
-           case .celsius: return "metric"
-           case .fahrenheit: return "imperial"
-           }
-       }
-    
-    var displayShort: String {
-        switch self {
-        case .celsius: return "°C"
-        case .fahrenheit: return "°F"
-        case .kelvin: return "°K"
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text(title)
+                    .font(.headline)
+                Picker(title, selection: $selectedOption) {
+                    
+                    ForEach (Array(Option.allCases)
+                    ){ option in
+                        Text(option.displayName).tag(option)
+                        
+                    }
+                }
+                .pickerStyle(.segmented)
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
+            .shadow(radius: 1)
         }
     }
-
-}
-
-enum WindSpeedUnit: String, SettingOption {
-    case meterPerSecond = "Meter/Sec"
-    case milesPerHour = "Miles/Hour"
     
-    var id: String { rawValue }
-    var displayName: String { rawValue }
     
-    var shortName: String {
-            switch self {
-            case .meterPerSecond: return "m/s"
-            case .milesPerHour: return "mph"
+    struct InfoCard: View {
+        let title: String
+        let subtitle: String
+        
+        var body: some View {
+            
+            VStack(alignment: .leading, spacing: 5) {
+                Text(title).font(.headline)
+                Text(subtitle).font(.subheadline).foregroundColor(.secondary)
             }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
+            .shadow(radius: 1)
         }
+    }
     
+    
+    
+    //#Preview {
+    //    let homeVM = HomeViewModel(getWeatherUseCase: UseCaseWeatherImpl(repo: RepositoryImpl(remoteDataSource: RemoteDataSourceImpl())))
+    //    let settingsVM = SettingsViewModel(homeViewModel: homeVM)
+    //    SettingsView(settingsViewModel: settingsVM)
+    //}
+    
+    
+    
+    
+    
+
+
+extension View {
+    func cardStyle() -> some View {
+        self
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
+            .shadow(radius: 1)
+    }
 }
-
-
-enum AppLanguage: String, SettingOption {
-    case english = "English"
-    case arabic = "العربية"
-    
-    var id: String { rawValue }
-    var displayName: String { rawValue }
-    
-    var apiParameter: String {
-            switch self {
-            case .english: return "en"
-            case .arabic: return "ar"
-            }
-        }
-}
-
-enum LocationMode: String, SettingOption {
-    case gps = "GPS"
-    case map = "Map"
-    
-    var id: String { rawValue }
-    var displayName: String { rawValue }
-    
-}
-

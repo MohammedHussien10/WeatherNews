@@ -16,7 +16,7 @@ protocol LocationServiceProtocol {
 final class LocationService:NSObject,LocationServiceProtocol{
     
     private let manager = CLLocationManager()
-    private var coutinuation:CheckedContinuation<CLLocationCoordinate2D,Error>?
+    private var continuation:CheckedContinuation<CLLocationCoordinate2D,Error>?
     
     
     override init() {
@@ -26,27 +26,37 @@ final class LocationService:NSObject,LocationServiceProtocol{
     }
     
     func requestCurrentLocation() async throws -> CLLocationCoordinate2D {
-        let status = manager.authorizationStatus
+
+          guard continuation == nil else {
+              throw LocationError.failed
+          }
+
+          let status = manager.authorizationStatus
+
+          switch status {
+          case .notDetermined:
+              manager.requestWhenInUseAuthorization()
+
+          case .authorizedWhenInUse, .authorizedAlways:
+              break
+
+          case .denied, .restricted:
+              throw LocationError.permissionDenied
+
+          @unknown default:
+              throw LocationError.failed
+          }
+
+          return try await withCheckedThrowingContinuation { continuation in
+              self.continuation = continuation
+              if status == .authorizedWhenInUse || status == .authorizedAlways {
+                  self.manager.requestLocation()
+              }
+          }
+      }
         
-        switch status{
-        case .notDetermined:
-            manager.requestWhenInUseAuthorization()
-        case.denied,.restricted
-            throw LocationError.permissionDenied
-            
-        default:
-            break
-        }
-        
-        return try await withCheckedThrowingContinuation{ continuation in
-            self.coutinuation = continuation
-            manager.requestLocation()
-        }
     }
-    
-    
-    
-}
+
 
 enum LocationError:LocalizedError{
         case permissionDenied
@@ -66,17 +76,38 @@ enum LocationError:LocalizedError{
 
 
 extension LocationService: CLLocationManagerDelegate {
-    func locationManager(manager:CLLocationManager,didUpdateLocations locations:[CLLocation]){
-        guard let location = locations.last else{
-            coutinuation?.resume(throwing: LocationError.failed)
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = manager.authorizationStatus
+
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
+            manager.requestLocation()
+        } else if status == .denied || status == .restricted {
+            continuation?.resume(throwing: LocationError.permissionDenied)
+            continuation = nil
+        }
+    }
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didUpdateLocations locations: [CLLocation]
+    ) {
+        guard let location = locations.last else {
+            continuation?.resume(throwing: LocationError.failed)
+            continuation = nil
             return
         }
-        
-        coutinuation?.resume(returning: location.coordinate)
-        coutinuation = nil
+
+        continuation?.resume(returning: location.coordinate)
+        continuation = nil
     }
-    func locationManager(manager:CLLocationManager,didFailWithError error: Error){
-        coutinuation?.resume(throwing: error)
-        coutinuation = nil
+
+    func locationManager(
+        _ manager: CLLocationManager,
+        didFailWithError error: Error
+    ) {
+        continuation?.resume(throwing: error)
+        continuation = nil
     }
 }
+

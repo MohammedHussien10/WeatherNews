@@ -1,0 +1,257 @@
+//
+//  Settings.swift
+//  WeatherNews
+//
+//  Created by Macos on 21/10/2025.
+//
+
+import SwiftUI
+// MARK: - Views
+struct SettingsView: View {
+    @AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue
+    @AppStorage("windSpeedUnit") private var windSpeedUnitRawValue: String = WindSpeedUnit.meterPerSecond.rawValue
+    @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
+    @AppStorage("locationMode") private var locationRawValue: String = LocationMode.gps.rawValue
+    @State private var showMap = false
+    @EnvironmentObject var homeViewModel: HomeViewModel
+    private var isGPSEnabled: Binding<Bool> {
+        Binding(
+            get: { locationRawValue == LocationMode.gps.rawValue },
+            set: { newValue in
+                if newValue {
+                    locationRawValue = LocationMode.gps.rawValue
+                    Task {
+                        await homeViewModel.fetchWeatherUsingGPS()
+                    }
+                }
+            }
+        )
+    }
+
+    private var isMapEnabled: Binding<Bool> {
+        Binding(
+            get: { locationRawValue == LocationMode.map.rawValue },
+            set: { newValue in
+                if newValue {
+                    locationRawValue = LocationMode.map.rawValue
+                    showMap = true
+                }
+            }
+        )
+    }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                
+                HStack{
+                    Text("Dark Mode").font(.headline)
+                    Spacer()
+                    Button(action: {
+                        withAnimation(.easeInOut){
+                            isDarkMode.toggle()
+                        }
+                    }){
+                        Image(systemName: isDarkMode ? "moon.fill" : "sun.max.fill" )
+                            .font(.title2)
+                            .foregroundColor(isDarkMode ? .yellow : .blue)
+                            .padding(8)
+                            .background(
+                                Circle().fill(Color(.secondarySystemBackground))
+                                    .shadow(radius: 2)
+                            )
+                    }
+                }
+                .padding().background(Color(.secondarySystemBackground)).cornerRadius(12).shadow(radius: 1)
+                PickerCard(title: "Temperature Unit", selectedOption: Binding(
+                    get: { TemperatureUnit(rawValue: temperatureUnitRawValue) ?? .celsius },
+                    set: { temperatureUnitRawValue = $0.rawValue }
+                )).onChange(of: temperatureUnitRawValue) { _ in
+                    Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
+                                                            longitude: homeViewModel.savedLon) }
+                }
+
+                
+                
+                PickerCard(title: "Wind Speed Unit", selectedOption: Binding(
+                    get: { WindSpeedUnit(rawValue: windSpeedUnitRawValue) ?? .meterPerSecond },
+                    set: { windSpeedUnitRawValue = $0.rawValue }
+                )).onChange(of: windSpeedUnitRawValue) { _ in
+                    homeViewModel.refetchWindSpeed()
+                }
+
+                PickerCard(title: "Language", selectedOption: Binding(
+                    get: { AppLanguage(rawValue: languageRawValue) ?? .english },
+                    set: { languageRawValue = $0.rawValue }
+                )).onChange(of: languageRawValue) { _ in
+                    Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
+                                                            longitude: homeViewModel.savedLon) }
+                }
+                PickerCard(
+                    title: "Location Mode",
+                    selectedOption: Binding(
+                        get: { LocationMode(rawValue: locationRawValue) ?? .gps },
+                        set: { locationRawValue = $0.rawValue }
+                    )
+                )
+                .onChange(of: locationRawValue) { newValue in
+                    if newValue == LocationMode.gps.rawValue {
+                        Task {
+                            await homeViewModel.fetchWeatherUsingGPS()
+                        }
+                    } else if newValue == LocationMode.map.rawValue {
+                        showMap = true
+                    }
+                }
+
+
+
+                InfoCard(title: "About App", subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien")
+
+                
+                
+            }
+            .padding()
+        }
+        .navigationDestination(isPresented:$showMap){
+            MapView(mode:.settings){coordinate in
+                locationRawValue = LocationMode.gps.rawValue
+            }
+        }.navigationTitle("Settings")
+    }
+}
+
+
+
+struct PickerCard<Option:SettingOption>: View {
+    let title: String
+    @Binding var selectedOption:Option
+    
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(title)
+                .font(.headline)
+            Picker(title, selection: $selectedOption) {
+
+                ForEach (Array(Option.allCases)
+                ){ option in
+                    Text(option.displayName).tag(option)
+                    
+                }
+            }
+            .pickerStyle(.segmented)
+        }
+        .padding()
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(12)
+        .shadow(radius: 1)
+    }
+}
+
+
+struct InfoCard: View {
+    let title: String
+    let subtitle: String
+    
+    var body: some View {
+        
+        VStack(alignment: .leading, spacing: 5) {
+            Text(title).font(.headline)
+            Text(subtitle).font(.subheadline).foregroundColor(.secondary)
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemBackground))
+        .cornerRadius(12)
+        .shadow(radius: 1)
+    }
+}
+
+
+
+//#Preview {
+//    let homeVM = HomeViewModel(getWeatherUseCase: UseCaseWeatherImpl(repo: RepositoryImpl(remoteDataSource: RemoteDataSourceImpl())))
+//    let settingsVM = SettingsViewModel(homeViewModel: homeVM)
+//    SettingsView(settingsViewModel: settingsVM)
+//}
+
+
+
+
+
+
+// MARK: - Protocol to for Make Options Generic
+
+protocol SettingOption: CaseIterable,Identifiable,RawRepresentable,Hashable where RawValue == String{
+    var displayName:String{get}
+}
+
+
+// MARK: - Units Enums
+enum TemperatureUnit: String, SettingOption {
+    case kelvin = "Kelvin (°K)"
+    case celsius = "Celsius (°C)"
+    case fahrenheit = "Fahrenheit (°F)"
+    
+    var id: String { rawValue }
+    var displayName: String {rawValue}
+    
+    var apiParameter: String {
+           switch self {
+           case .kelvin: return "standard"
+           case .celsius: return "metric"
+           case .fahrenheit: return "imperial"
+           }
+       }
+    
+    var displayShort: String {
+        switch self {
+        case .celsius: return "°C"
+        case .fahrenheit: return "°F"
+        case .kelvin: return "°K"
+        }
+    }
+
+}
+
+enum WindSpeedUnit: String, SettingOption {
+    case meterPerSecond = "Meter/Sec"
+    case milesPerHour = "Miles/Hour"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+    var shortName: String {
+            switch self {
+            case .meterPerSecond: return "m/s"
+            case .milesPerHour: return "mph"
+            }
+        }
+    
+}
+
+
+enum AppLanguage: String, SettingOption {
+    case english = "English"
+    case arabic = "العربية"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+    var apiParameter: String {
+            switch self {
+            case .english: return "en"
+            case .arabic: return "ar"
+            }
+        }
+}
+
+enum LocationMode: String, SettingOption {
+    case gps = "GPS"
+    case map = "Map"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+}
+

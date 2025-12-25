@@ -55,8 +55,8 @@ final class FavoritesViewModel:ObservableObject{
         do{
             let placemarks = try await geocoder.reverseGeocodeLocation(location)
             if let placemark = placemarks.first{
-                cityName = placemark.locality ?? placemark.subAdministrativeArea  ?? "Unknown"
-                countryName = placemark.country ?? "Unknown"
+                cityName = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.country ?? "Unknown"
+                countryName = placemark.country ?? "Unknown"  
                 
             }
         }catch{

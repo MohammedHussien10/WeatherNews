@@ -123,7 +123,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             
             savedLat = coordinate.latitude
             savedLon = coordinate.longitude
-            
+            print("here lat\(coordinate.latitude) long\(coordinate.longitude)")
             await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
             
         }catch{
@@ -215,3 +215,79 @@ struct HelperWeatherDetails {
 
     
 }
+// MARK: - Units Enums
+enum TemperatureUnit: String, SettingOption {
+    case kelvin = "Kelvin (°K)"
+    case celsius = "Celsius (°C)"
+    case fahrenheit = "Fahrenheit (°F)"
+    
+    var id: String { rawValue }
+    var displayName: String {rawValue}
+    
+    var apiParameter: String {
+           switch self {
+           case .kelvin: return "standard"
+           case .celsius: return "metric"
+           case .fahrenheit: return "imperial"
+           }
+       }
+    
+    var displayShort: String {
+        switch self {
+        case .celsius: return "°C"
+        case .fahrenheit: return "°F"
+        case .kelvin: return "°K"
+        }
+    }
+
+}
+
+enum WindSpeedUnit: String, SettingOption {
+    case meterPerSecond = "Meter/Sec"
+    case milesPerHour = "Miles/Hour"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+    var shortName: String {
+            switch self {
+            case .meterPerSecond: return "m/s"
+            case .milesPerHour: return "mph"
+            }
+        }
+    
+}
+
+
+enum AppLanguage: String, SettingOption {
+    case english = "English"
+    case arabic = "العربية"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+    var apiParameter: String {
+            switch self {
+            case .english: return "en"
+            case .arabic: return "ar"
+            }
+        }
+}
+
+enum LocationMode: String, SettingOption {
+    case gps = "GPS"
+    case map = "Map"
+    case none = "None"
+    
+    var id: String { rawValue }
+    var displayName: String { rawValue }
+    
+}
+
+// MARK: - Protocol to for Make Options Generic
+
+protocol SettingOption: CaseIterable,Identifiable,RawRepresentable,Hashable where RawValue == String{
+    var displayName:String{get}
+}
+
+
