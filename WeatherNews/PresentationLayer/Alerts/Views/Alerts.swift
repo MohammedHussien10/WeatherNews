@@ -45,7 +45,13 @@ struct Alerts: View {
                         
                         
                         
+                    }.onDelete { indexSet in
+                        for index in indexSet {
+                            let id = viewModel.alerts[index].id
+                            viewModel.deleteAlert(id: id)
+                        }
                     }
+
                 }
             }
         }.navigationTitle("Weather Alerts")

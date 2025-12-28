@@ -36,6 +36,12 @@ final class AlertsViewModel:ObservableObject{
         storage.save(alerts)
     }
     
+    func deleteAlert(id: UUID) {
+         AlertManager.shared.cancelAlert(id: id)
+         alerts.removeAll { $0.id == id }
+         storage.save(alerts)
+     }
+    
 }
 
 protocol AlertsStorage {
@@ -59,4 +65,7 @@ final class AlertsUserDefaultsStorage: AlertsStorage {
         let data = try? JSONEncoder().encode(alerts)
         UserDefaults.standard.set(data, forKey: key)
     }
+    
+ 
+    
 }

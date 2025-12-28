@@ -10,7 +10,7 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
     
     var body: some View { 
         Group{
-            if viewModel.isLoading || viewModel.currentWeather == nil || viewModel.forecast == nil  {
+            if viewModel.currentWeather == nil || viewModel.forecast == nil  {
                 CircleLoading()
             }else{
                 VStack(alignment:.center,spacing: 16) {
@@ -42,11 +42,13 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                 
                 
             }
-        }.navigationBarTitleDisplayMode(.inline).onAppear {
-            print("API city:", viewModel.currentWeather?.name ?? "nil")
-            print("API country:", viewModel.currentWeather?.sys.country ?? "nil")
-            print("Fallback:", viewModel.fallbackCityName ?? "nil")
+        }.navigationBarTitleDisplayMode(.inline).task{
+            await viewModel.loadCachedOrFetch(latitude: nil, longitude:nil)
+        }.refreshable {
+            await viewModel.refresh(latitude: viewModel.lat,
+                                     longitude: viewModel.long)
         }
+
 
     }
   
@@ -69,4 +71,9 @@ protocol WeatherDetailsVMProtocol: ObservableObject {
     var isLoading: Bool { get }
     var fallbackCityName: String? { get }
     var fallbackCountryName: String? { get }
+    var lat: Double? { get }
+    var long: Double? { get }
+    func refresh(latitude: Double?, longitude: Double?) async
+    func loadCachedOrFetch(latitude: Double?, longitude: Double?) async
+    
 }

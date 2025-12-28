@@ -22,13 +22,14 @@ final class AlertManager {
         let content = UNMutableNotificationContent()
         content.title = "Weather Alert"
         content.body = "Weather alert for \(alert.city)"
-        
+ 
+
         switch alert.type{
             
         case .notification:
-            content.sound = .default
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("Dik_Voice.wav"))
         case .alarm:
-            content.sound = .defaultCritical
+            content.sound = UNNotificationSound(named: UNNotificationSoundName("Battleship_alarm.wav"))
         }
         
         let trigger  = UNTimeIntervalNotificationTrigger(timeInterval: max( alert.startDate.timeIntervalSinceNow,5), repeats: false)

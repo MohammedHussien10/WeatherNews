@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import MapKit
 final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
+  
     @Published var currentWeather : WeatherResponse?
     @Published var forecast : ForecastResponse?
     @Published var windSpeedConverter : Double?
@@ -16,8 +17,12 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @Published var errorMessage: String?
     @Published var fallbackCityName: String?
     @Published var fallbackCountryName: String?
+    @Published var locationSource: LocationSource = .gps
+
     @AppStorage("savedLat") var savedLat: Double = 30.0444
     @AppStorage("savedLon") var savedLon: Double = 31.2357
+    var lat: Double?
+    var long: Double?
     @AppStorage("temperatureUnit") private var temperatureUnitRawValue: String = TemperatureUnit.celsius.rawValue
     @AppStorage("windSpeedUnit") private var windSpeedUnitRawValue: String = WindSpeedUnit.meterPerSecond.rawValue
     @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
@@ -43,6 +48,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     private let locationService: LocationServiceProtocol
     private let getWeatherUseCase: UseCaseWeather
     private let helper: HelperWeatherDetails = HelperWeatherDetails()
+    private var fetchTask: Task<Void, Never>?
     init(getWeatherUseCase: UseCaseWeather,locationService: LocationServiceProtocol = LocationService()) {
         self.getWeatherUseCase = getWeatherUseCase
         self.locationService = locationService
@@ -50,6 +56,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     
     @MainActor
     func fetchWeather(latitude:Double,longitude:Double) async {
+        if Task.isCancelled { return }
         let unitTemp = temperatureUnit.apiParameter
         let appLanguage = language.apiParameter
         isLoading = true
@@ -61,24 +68,73 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             async let forecastData = try getWeatherUseCase.getForecast(category: .latandLong(latitude, longitude),unit:unitTemp,language:appLanguage)
             
         let (weatherResponse,forecastResponse) = try await (currentWeatherData,forecastData)
-            
+            if Task.isCancelled { return }
             self.currentWeather = weatherResponse
             self.forecast = forecastResponse
             
-            await resolveFallbackCityAndCountryIfNeeded(
-                latitude: latitude,
-                longitude: longitude
-            )
+            await resolveFallbackCityAndCountryIfNeeded(latitude: latitude,longitude: longitude)
+            // save Cache
+            WeatherCacheManager.shared.save(weather: weatherResponse, forecast: forecastResponse)
 
         }catch{
             self.errorMessage = error.localizedDescription
+            if let (w,f,_) = WeatherCacheManager.shared.load() {
+                         self.currentWeather = w
+                         self.forecast = f
+            }
         }
         isLoading = false
         windSpeedConverter = helper.convertWindSpeed(currentWeather?.wind.speed ?? 0.0, from: temperatureUnit, to: windSpeedUnit)
     }
+ 
+    @MainActor
+    func loadCachedOrFetch(latitude: Double?, longitude: Double?) async {
+        fetchTask?.cancel()
+        let lat: Double
+         let lon: Double
+
+         if let latitude, let longitude {
+             lat = latitude
+             lon = longitude
+         } else {
+             switch locationSource {
+             case .gps:
+                 lat = savedLat
+                 lon = savedLon
+             case .map:
+                 guard let mapLat = self.lat,
+                       let mapLon = self.long else { return }
+                 lat = mapLat
+                 lon = mapLon
+             }
+         }
+
+         self.lat = lat
+         self.long = lon
+        
+        if WeatherCacheManager.shared.isCacheValid(),let (w,f) = WeatherCacheManager.shared.getCachedWeather(){
+            self.currentWeather = w
+            self.forecast = f
+        }
+        fetchTask = Task { [weak self] in
+                     guard let self = self else { return }
+                     await self.fetchWeather(latitude: lat, longitude: lon)
+                     self.fetchTask = nil
+          }
+        
+    }
     
-    
-  
+    @MainActor
+    func refresh(latitude: Double?, longitude: Double?) async {
+        fetchTask?.cancel()
+            let lat = latitude ?? self.lat ?? savedLat
+            let lon = longitude ?? self.long ?? savedLon
+            fetchTask = Task { [weak self] in
+                guard let self = self else { return }
+                await self.fetchWeather(latitude: lat, longitude: lon)
+                self.fetchTask = nil
+            }
+    }
     
     func refetchWindSpeed() {
         guard let speed = currentWeather?.wind.speed else { return }
@@ -118,22 +174,40 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     }
     @MainActor
     func fetchWeatherUsingGPS() async {
+        fetchTask?.cancel()
+        locationSource = .gps
         do{
             let coordinate = try await locationService.requestCurrentLocation()
             
             savedLat = coordinate.latitude
             savedLon = coordinate.longitude
-            print("here lat\(coordinate.latitude) long\(coordinate.longitude)")
-            await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            lat = coordinate.latitude
+            long = coordinate.longitude
+       await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
             
         }catch{
             print("GPS error:", error.localizedDescription)
         }
     }
     
+    @MainActor
+    func fetchWeatherFromMap(lat: Double, lon: Double) async {
+        fetchTask?.cancel()
+        locationSource = .map
+
+        self.lat = lat
+        self.long = lon
+
+        await fetchWeather(latitude: lat, longitude: lon)
+    }
+
     
 }
 
+enum LocationSource {
+    case gps
+    case map
+}
 
 
 struct HelperWeatherDetails {
