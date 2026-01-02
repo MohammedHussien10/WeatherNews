@@ -64,6 +64,14 @@ final class AppAssembly {
             return FavoritesViewModel(getWeatherUseCase: useCase)
 
         }.inObjectScope(.container)
+        
+        
+        container.register(AlertsViewModel.self) { r in
+
+
+            return AlertsViewModel()
+
+        }.inObjectScope(.container)
 
         return container
     }()

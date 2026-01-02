@@ -8,76 +8,69 @@
 import SwiftUI
 
 struct Alerts: View {
-    @StateObject var viewModel = AlertsViewModel()
-    @State private var showAddAlert = false
+    @EnvironmentObject var viewModel: AlertsViewModel
+    
+    @State private var alertDate = Date()
+    @State private var showDatePicker = false
+    @State private var showMap = false
+    @State private var type: AlertType = .notification
     var body: some View {
-        Group{
+        ZStack{
+            RowOfAlertsList().environmentObject(viewModel)
             
-            if viewModel.alerts.isEmpty {
-                ContentUnavailableView(
-                    "No Alerts",
-                    systemImage: "bell",
-                    description: Text("Tap + to add a weather alert")
-                )
-            } else {
-                
-                
-                
-                List {
-                    ForEach(viewModel.alerts.sorted {
-                        $0.isActive && !$1.isActive
-                    }) { alert in
-                        
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(alert.city)
-                                Text(alert.type.rawValue.capitalized)
-                                    .font(.caption)
-                            }
-                            
-                            Spacer()
-                            if alert.isActive {
-                                Button("Stop") {
-                                    viewModel.stopAlert(id: alert.id)
-                                }.tint(.red)
-                            }
-                        }
-                        
-                        
-                        
-                    }.onDelete { indexSet in
-                        for index in indexSet {
-                            let id = viewModel.alerts[index].id
-                            viewModel.deleteAlert(id: id)
-                        }
-                    }
-
-                }
+            AddAlertView{
+                showMap = true
             }
-        }.navigationTitle("Weather Alerts")
-            .toolbar {
-                Button {
-                    showAddAlert = true
-                } label: {
-                    Image(systemName: "plus")
+        }.task {
+            await AlertManager.shared.requestPermission()
+        }
+.navigationTitle("Weather Alerts")
+            .task {
+            await viewModel.loadAlerts()
+        }.navigationDestination(isPresented: $showMap) {
+            MapView(mode: .alerts) { _ in 
+                showDatePicker = true
+                
+            }
+            
+        }.sheet(isPresented: $showDatePicker) {
+            VStack(spacing: 16) {
+
+                Text(viewModel.cityOfAlert ?? "No location selected")
+                    .font(.headline)
+
+                DatePicker(
+                    "Select alert time",
+                    selection: $alertDate,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .datePickerStyle(.graphical)
+
+                Picker("Alert Type", selection: $type) {
+                    ForEach(AlertType.allCases, id: \.self) {
+                        Text($0.rawValue.capitalized)
+                    }
                 }
-            } .sheet(isPresented: $showAddAlert) {
-                AddAlertView { city, start, end, type in
+
+                Button("Confirm") {
                     viewModel.addAlert(
-                        city: city,
-                        start: start,
-                        end: end,
+                        city: viewModel.cityOfAlert!,
+                        dateOfAlert: alertDate,
                         type: type
                     )
+                    showDatePicker = false
                 }
+                .disabled(viewModel.cityOfAlert == nil)
             }
-            .task {
-                await AlertManager.shared.requestPermission()
-            }
+            .padding()
+        }
+
+
+        
     }
     
-    
 }
+
 
 #Preview {
     Alerts()

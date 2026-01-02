@@ -12,6 +12,7 @@ struct MapView: View {
     let onSelect: (CLLocationCoordinate2D)->Void
     @EnvironmentObject var homeviewModel : HomeViewModel
     @EnvironmentObject var favoritesviewModel : FavoritesViewModel
+    @EnvironmentObject var alertsviewModel : AlertsViewModel
     @Environment(\.dismiss) private var dismiss
     @State private var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0.7893, longitude: 21.0936), span: MKCoordinateSpan(latitudeDelta: 50, longitudeDelta: 50))
     @State private var isLoading = false
@@ -85,8 +86,13 @@ struct MapView: View {
 
                 return "\(country), \(city)"
         case .favorites:
-            return "Select a location"
-        }
+            return "Select a location To Favorites"
+            
+        case .alerts:
+                return "Select a location To Alerts"
+            }
+  
+  
     }
     
     
@@ -122,6 +128,8 @@ struct MapView: View {
             case.favorites:
                 await favoritesviewModel.resolveFallbackCityAndCountryIfNeeded(lat: selectedCoordinate.latitude, long: selectedCoordinate.longitude)
                 
+            case .alerts:
+              await alertsviewModel.getNameOfCityOrCountry(lat: selectedCoordinate.latitude, long: selectedCoordinate.longitude)
                 
             }
             if Task.isCancelled { return }
@@ -148,4 +156,5 @@ struct Location: Identifiable {
 enum MapMode {
     case favorites
     case settings
+    case alerts
 }

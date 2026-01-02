@@ -9,7 +9,6 @@ import Foundation
 final class UseCaseWeatherImpl:UseCaseWeather{
  
     let repo : Repository
-    
     init(repo: Repository) {
         self.repo = repo
     }

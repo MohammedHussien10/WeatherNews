@@ -32,7 +32,7 @@ final class AlertManager {
             content.sound = UNNotificationSound(named: UNNotificationSoundName("Battleship_alarm.wav"))
         }
         
-        let trigger  = UNTimeIntervalNotificationTrigger(timeInterval: max( alert.startDate.timeIntervalSinceNow,5), repeats: false)
+        let trigger  = UNTimeIntervalNotificationTrigger(timeInterval: max( alert.date.timeIntervalSinceNow,5), repeats: false)
         
         
         let request = UNNotificationRequest(identifier: alert.id.uuidString, content: content, trigger: trigger)
@@ -73,8 +73,7 @@ enum AlertType: String, Codable, CaseIterable {
 struct WeatherAlert: Identifiable, Codable {
     let id: UUID
     let city: String
-    let startDate: Date
-    let endDate: Date
+    let date: Date
     let type: AlertType
     var isActive: Bool
 }

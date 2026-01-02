@@ -6,11 +6,11 @@
 //
 
 import Foundation
-@MainActor
+import MapKit
 final class AlertsViewModel:ObservableObject{
     
     @Published var alerts:[WeatherAlert] = []
-    
+    @Published var cityOfAlert : String?
     private let storage: AlertsStorage
     
     init(storage: AlertsStorage = AlertsUserDefaultsStorage()) {
@@ -18,16 +18,25 @@ final class AlertsViewModel:ObservableObject{
           self.alerts = storage.load()
     }
     
-    
-    func addAlert(city: String, start: Date,end: Date, type: AlertType) {
-        
-        let alert = WeatherAlert(id: UUID(), city: city, startDate: start, endDate: end, type: type, isActive: true)
-        
+    @MainActor
+    func addAlert(city: String?, dateOfAlert: Date, type: AlertType) {
+        guard let city else { return }
+        guard dateOfAlert > Date() else { return }
+
+        let alert = WeatherAlert(
+            id: UUID(),
+            city: city,
+            date: dateOfAlert,
+            type: type,
+            isActive: true
+        )
+
         alerts.append(alert)
         storage.save(alerts)
         AlertManager.shared.scheduleAlert(alert: alert)
     }
-    
+
+    @MainActor
     func stopAlert(id: UUID) {
         AlertManager.shared.cancelAlert(id: id)
         
@@ -35,12 +44,37 @@ final class AlertsViewModel:ObservableObject{
                 alerts[index].isActive = false
         storage.save(alerts)
     }
-    
+    @MainActor
     func deleteAlert(id: UUID) {
          AlertManager.shared.cancelAlert(id: id)
          alerts.removeAll { $0.id == id }
          storage.save(alerts)
      }
+    
+    @MainActor
+    func loadAlerts() async{
+        alerts = storage.load()
+     }
+    @MainActor
+    func getNameOfCityOrCountry(lat: Double, long: Double) async {
+        let location = CLLocation(latitude: lat, longitude: long)
+        let geocoder = CLGeocoder()
+        
+        do {
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+            
+            if let placemark = placemarks.first {
+                cityOfAlert = placemark.locality
+                    ?? placemark.subAdministrativeArea
+                    ?? placemark.country
+                    ?? "Unknown"
+            }
+        } catch {
+            print("Reverse geocoding failed: \(error)")
+        }
+        
+    
+    }
     
 }
 
@@ -66,6 +100,6 @@ final class AlertsUserDefaultsStorage: AlertsStorage {
         UserDefaults.standard.set(data, forKey: key)
     }
     
- 
+
     
 }

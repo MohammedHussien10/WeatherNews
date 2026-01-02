@@ -47,8 +47,21 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
         }.refreshable {
             await viewModel.refresh(latitude: viewModel.lat,
                                      longitude: viewModel.long)
+        }.toolbar {
+            HStack{
+                Button {
+                    print("fav")
+                } label: {
+                    Image(systemName: "heart.fill")
+                }
+                
+                Button {
+                    print("bell")
+                } label: {
+                    Image(systemName: "bell.fill")
+                }
+            }
         }
-
 
     }
   
