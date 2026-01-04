@@ -30,8 +30,14 @@ struct RowOfAlertsList: View {
                            HStack {
                                VStack(alignment: .leading) {
                                    Text(alert.city)
-                                   Text(alert.type.rawValue.capitalized)
-                                       .font(.caption)
+                                   Text(alert.type.rawValue.capitalized).foregroundColor(.blue)
+                                  
+                                   Text(alert.date.formatted(
+                                       date: .abbreviated,
+                                       time: .shortened
+                                   ))
+                                   .font(.subheadline)
+                                   .foregroundColor(.gray)
                                }
                            }
                        } .onDelete { indexSet in
