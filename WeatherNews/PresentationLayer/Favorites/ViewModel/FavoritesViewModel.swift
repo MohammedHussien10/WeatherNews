@@ -10,14 +10,16 @@ import SwiftUI
 import MapKit
 final class FavoritesViewModel:ObservableObject{
     @Published var favorites:[FavouritesModel] = []
-
      let getWeatherUseCase: UseCaseWeather
+    
     init(getWeatherUseCase: UseCaseWeather) {
         self.getWeatherUseCase = getWeatherUseCase
     }
     
 
+    
 
+ 
     
     @MainActor
     func loadFavorites() async{
@@ -79,5 +81,29 @@ final class FavoritesViewModel:ObservableObject{
         }
     }
     
+    func isFavorite(lat: Double?, long: Double?) -> Bool {
+        guard let lat, let long else { return false }
+
+        return favorites.contains { fav in
+            abs(fav.latitude - lat) < 0.0001 &&
+            abs(fav.longitude - long) < 0.0001
+        }
+    }
+    
+    @MainActor
+    func toggleFavorite(lat: Double?, long: Double?) async {
+        guard let lat, let long else { return }
+
+        if let existing = favorites.first(where: {
+            abs($0.latitude - lat) < 0.0001 &&
+            abs($0.longitude - long) < 0.0001
+        }) {
+            await deleteFavorite(id: existing.id)
+        } else {
+            await resolveFallbackCityAndCountryIfNeeded(lat: lat, long: long)
+        }
+    }
+
+
     
 }

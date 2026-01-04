@@ -48,9 +48,11 @@ struct RowOfAlertsList: View {
                         
                     }.onDelete { indexSet in
                         for index in indexSet {
-                              let id = sortedAlerts[index].id
-                              viewModel.deleteAlert(id: id)
-                          }
+                            let id = sortedAlerts[index].id
+                            Task{
+                                await viewModel.deleteAlert(id: id)
+                            }
+                        }
                     }
                     
                 }

@@ -73,6 +73,8 @@ enum AlertType: String, Codable, CaseIterable {
 struct WeatherAlert: Identifiable, Codable {
     let id: UUID
     let city: String
+    let latitude: Double
+    let longitude: Double
     let date: Date
     let type: AlertType
     var isActive: Bool

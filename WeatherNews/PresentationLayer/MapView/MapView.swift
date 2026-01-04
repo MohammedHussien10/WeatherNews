@@ -129,6 +129,9 @@ struct MapView: View {
                 await favoritesviewModel.resolveFallbackCityAndCountryIfNeeded(lat: selectedCoordinate.latitude, long: selectedCoordinate.longitude)
                 
             case .alerts:
+                
+                alertsviewModel.pendingLat = selectedCoordinate.latitude
+                alertsviewModel.pendingLong = selectedCoordinate.longitude
               await alertsviewModel.getNameOfCityOrCountry(lat: selectedCoordinate.latitude, long: selectedCoordinate.longitude)
                 
             }

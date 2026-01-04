@@ -15,7 +15,7 @@ struct FAB: View {
                                        .font(.title)
                                        .foregroundColor(.white)
                                        .padding()
-                                       .background(Color.blue)
+                                       .background(Color.green)
                                        .clipShape(Circle())
                                        .shadow(radius: 6)
                                }

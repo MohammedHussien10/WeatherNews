@@ -11,6 +11,13 @@ struct HomeView: View {
     @EnvironmentObject var viewModel: HomeViewModel
     var body: some View {
         WeatherDetailsView(viewModel: viewModel)
+            .task {
+                await viewModel.loadCachedOrFetch(
+                    latitude: viewModel.lat,
+                    longitude: viewModel.long
+                )
+            }
+
     }
 }
 

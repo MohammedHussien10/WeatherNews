@@ -17,11 +17,11 @@ struct AddAlertView: View {
                 HStack {
                     Spacer()
                     Button(action: action) {
-                                   Image(systemName: "bell")
+                                   Image(systemName: "bell.fill")
                                        .font(.title)
                                        .foregroundColor(.white)
                                        .padding()
-                                       .background(Color.blue)
+                                       .background(Color.green)
                                        .clipShape(Circle())
                                        .shadow(radius: 6)
                                }

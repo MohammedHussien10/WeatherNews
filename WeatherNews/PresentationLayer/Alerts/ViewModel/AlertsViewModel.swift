@@ -11,6 +11,9 @@ final class AlertsViewModel:ObservableObject{
     
     @Published var alerts:[WeatherAlert] = []
     @Published var cityOfAlert : String?
+    @Published var pendingLat: Double?
+    @Published var pendingLong: Double?
+    @Published var isCreatingFromHome = false
     private let storage: AlertsStorage
     
     init(storage: AlertsStorage = AlertsUserDefaultsStorage()) {
@@ -19,13 +22,24 @@ final class AlertsViewModel:ObservableObject{
     }
     
     @MainActor
-    func addAlert(city: String?, dateOfAlert: Date, type: AlertType) {
-        guard let city else { return }
-        guard dateOfAlert > Date() else { return }
+    func addAlert(
+        city: String?,
+        lat: Double?,
+        long: Double?,
+        dateOfAlert: Date,
+        type: AlertType
+    ) {
+        guard let city,
+              let lat,
+              let long,
+              dateOfAlert > Date()
+        else { return }
 
         let alert = WeatherAlert(
             id: UUID(),
             city: city,
+            latitude: lat,
+            longitude: long,
             date: dateOfAlert,
             type: type,
             isActive: true
@@ -34,7 +48,13 @@ final class AlertsViewModel:ObservableObject{
         alerts.append(alert)
         storage.save(alerts)
         AlertManager.shared.scheduleAlert(alert: alert)
+
+        cityOfAlert = nil
+        pendingLat = nil
+        pendingLong = nil
+        isCreatingFromHome = false
     }
+
 
     @MainActor
     func stopAlert(id: UUID) {
@@ -45,7 +65,7 @@ final class AlertsViewModel:ObservableObject{
         storage.save(alerts)
     }
     @MainActor
-    func deleteAlert(id: UUID) {
+    func deleteAlert(id: UUID)async {
          AlertManager.shared.cancelAlert(id: id)
          alerts.removeAll { $0.id == id }
          storage.save(alerts)
@@ -75,6 +95,28 @@ final class AlertsViewModel:ObservableObject{
         
     
     }
+    
+    func hasAlert(lat: Double?, long: Double?) -> Bool {
+        guard let lat, let long else { return false }
+
+        return alerts.contains { alert in
+            abs(alert.latitude - lat) < 0.0001 &&
+            abs(alert.longitude - long) < 0.0001 &&
+            alert.isActive
+        }
+    }
+
+
+    @MainActor
+    func deleteAlertForLocation(lat: Double, long: Double) async {
+        guard let alert = alerts.first(where: {
+            abs($0.latitude - lat) < 0.0001 &&
+            abs($0.longitude - long) < 0.0001
+        }) else { return }
+
+        await deleteAlert(id: alert.id)
+    }
+
     
 }
 

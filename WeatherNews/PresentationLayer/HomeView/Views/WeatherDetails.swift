@@ -7,8 +7,11 @@ import SwiftUI
 
 struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
     @ObservedObject var viewModel: VM
-    
-    var body: some View { 
+    @State private var addToAlerts = false
+    @State private var addToFavorites = false
+    @EnvironmentObject var alertsviewModel : AlertsViewModel
+    @EnvironmentObject var favoritesViewModel : FavoritesViewModel
+    var body: some View {
         Group{
             if viewModel.currentWeather == nil || viewModel.forecast == nil  {
                 CircleLoading()
@@ -42,26 +45,81 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                 
                 
             }
-        }.navigationBarTitleDisplayMode(.inline).task{
-            await viewModel.loadCachedOrFetch(latitude: nil, longitude:nil)
-        }.refreshable {
+        }
+.navigationBarTitleDisplayMode(.inline).task(id: viewModel.lat) {
+    guard let lat = viewModel.lat,
+          let long = viewModel.long else { return }
+
+    await alertsviewModel.getNameOfCityOrCountry(lat: lat, long: long)
+}
+.refreshable {
             await viewModel.refresh(latitude: viewModel.lat,
                                      longitude: viewModel.long)
         }.toolbar {
-            HStack{
+
+            ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    print("fav")
-                } label: {
-                    Image(systemName: "heart.fill")
+                    guard let lat = viewModel.lat,
+                          let long = viewModel.long else { return }
+
+                    Task {
+                        if alertsviewModel.hasAlert(lat: lat, long: long) {
+                    
+                            await alertsviewModel.deleteAlertForLocation(
+                                lat: lat,
+                                long: long
+                            )
+                        } else {
+                        
+                            alertsviewModel.pendingLat = lat
+                            alertsviewModel.pendingLong = long
+                            alertsviewModel.isCreatingFromHome = true
+                            addToAlerts = true
+                        }
+                    }
                 }
-                
-                Button {
-                    print("bell")
-                } label: {
-                    Image(systemName: "bell.fill")
+            label: {
+                    Image(systemName:
+                        alertsviewModel.hasAlert(
+                            lat: viewModel.lat,
+                            long: viewModel.long
+                        )
+                        ? "bell.fill"
+                        : "bell"
+                    )
+                    .foregroundColor(.green)
                 }
+                .disabled(viewModel.lat == nil || viewModel.long == nil)
             }
+
+
+
+
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    Task {
+                        await favoritesViewModel.toggleFavorite(
+                            lat: viewModel.lat,
+                            long: viewModel.long
+                        )
+                    }
+                } label: {
+                    Image(systemName:
+                        favoritesViewModel.isFavorite(
+                            lat: viewModel.lat,
+                            long: viewModel.long
+                        )
+                        ? "heart.fill"
+                        : "heart"
+                    ) .foregroundColor(.green)
+                }
+                .disabled(viewModel.lat == nil || viewModel.long == nil)
+            }
+
+        }.navigationDestination(isPresented: $addToAlerts){
+            Alerts()
         }
+
 
     }
   

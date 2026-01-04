@@ -25,9 +25,14 @@ struct Alerts: View {
             await AlertManager.shared.requestPermission()
         }
 .navigationTitle("Weather Alerts")
-            .task {
-            await viewModel.loadAlerts()
-        }.navigationDestination(isPresented: $showMap) {
+.task {
+    await viewModel.loadAlerts()
+
+    if viewModel.isCreatingFromHome {
+        showDatePicker = true
+    }
+}
+.navigationDestination(isPresented: $showMap) {
             MapView(mode: .alerts) { _ in 
                 showDatePicker = true
                 
@@ -53,12 +58,18 @@ struct Alerts: View {
                 }
 
                 Button("Confirm") {
-                    viewModel.addAlert(
-                        city: viewModel.cityOfAlert!,
-                        dateOfAlert: alertDate,
-                        type: type
-                    )
-                    showDatePicker = false
+                    if let lat = viewModel.pendingLat,
+                       let long = viewModel.pendingLong {
+
+                        viewModel.addAlert(
+                            city: viewModel.cityOfAlert!, lat: lat,
+                            long: long,
+                            dateOfAlert: alertDate,
+                            type: type
+                        )
+                        showDatePicker = false
+                    }
+
                 }
                 .disabled(viewModel.cityOfAlert == nil)
             }
