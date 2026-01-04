@@ -28,7 +28,7 @@ final class FavoritesViewModel:ObservableObject{
             print("Error loading favorites: \(error)")
         }
     }
-    
+    @MainActor
     func addFavorite(place: FavouritesModel) async {
          do {
              try await getWeatherUseCase.addDataWeatherToFavs(dataWeather: place)
@@ -37,7 +37,7 @@ final class FavoritesViewModel:ObservableObject{
              print("Error adding favorite: \(error)")
          }
      }
-    
+    @MainActor
     func deleteFavorite(id: UUID) async {
          do {
              try await getWeatherUseCase.removeDataWeatherFromFavs(id: id)
@@ -46,7 +46,7 @@ final class FavoritesViewModel:ObservableObject{
              print("Error deleting favorite: \(error)")
          }
      }
-    
+    @MainActor
     func resolveFallbackCityAndCountryIfNeeded(lat: Double, long: Double) async{
         var cityName = "Unknown"
         var countryName = "Unknown"
@@ -80,7 +80,7 @@ final class FavoritesViewModel:ObservableObject{
             print("Favorite already exists!")
         }
     }
-    
+    @MainActor
     func isFavorite(lat: Double?, long: Double?) -> Bool {
         guard let lat, let long else { return false }
 

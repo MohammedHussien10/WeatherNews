@@ -15,7 +15,16 @@ final class AlertsViewModel:ObservableObject{
     @Published var pendingLong: Double?
     @Published var isCreatingFromHome = false
     private let storage: AlertsStorage
-    
+    var sortedAlerts: [WeatherAlert] {
+        alerts.sorted {
+            if $0.isActive != $1.isActive {
+                return $0.isActive && !$1.isActive
+            }
+            return $0.date < $1.date
+        }
+    }
+
+
     init(storage: AlertsStorage = AlertsUserDefaultsStorage()) {
           self.storage = storage
           self.alerts = storage.load()
@@ -95,7 +104,7 @@ final class AlertsViewModel:ObservableObject{
         
     
     }
-    
+    @MainActor
     func hasAlert(lat: Double?, long: Double?) -> Bool {
         guard let lat, let long else { return false }
 
@@ -128,7 +137,7 @@ protocol AlertsStorage {
 
 final class AlertsUserDefaultsStorage: AlertsStorage {
     private let key = "weather_alerts"
-
+    @MainActor
     func load() -> [WeatherAlert] {
         guard let data = UserDefaults.standard.data(forKey: key),
               let alerts = try? JSONDecoder().decode([WeatherAlert].self, from: data)
@@ -136,7 +145,7 @@ final class AlertsUserDefaultsStorage: AlertsStorage {
 
         return alerts
     }
-
+    @MainActor
     func save(_ alerts: [WeatherAlert]) {
         let data = try? JSONEncoder().encode(alerts)
         UserDefaults.standard.set(data, forKey: key)

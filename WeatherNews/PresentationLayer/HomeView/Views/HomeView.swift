@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject var viewModel: HomeViewModel
     var body: some View {
-        WeatherDetailsView(viewModel: viewModel)
+        WeatherDetailsView(viewModel: viewModel, fromFavorites: false)
             .task {
                 await viewModel.loadCachedOrFetch(
                     latitude: viewModel.lat,

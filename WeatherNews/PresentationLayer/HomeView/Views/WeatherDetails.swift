@@ -9,6 +9,7 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
     @ObservedObject var viewModel: VM
     @State private var addToAlerts = false
     @State private var addToFavorites = false
+    let fromFavorites: Bool
     @EnvironmentObject var alertsviewModel : AlertsViewModel
     @EnvironmentObject var favoritesViewModel : FavoritesViewModel
     var body: some View {
@@ -56,66 +57,66 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
             await viewModel.refresh(latitude: viewModel.lat,
                                      longitude: viewModel.long)
         }.toolbar {
-
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button {
-                    guard let lat = viewModel.lat,
-                          let long = viewModel.long else { return }
-
-                    Task {
-                        if alertsviewModel.hasAlert(lat: lat, long: long) {
-                    
-                            await alertsviewModel.deleteAlertForLocation(
-                                lat: lat,
-                                long: long
-                            )
-                        } else {
+            if !fromFavorites{
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        guard let lat = viewModel.lat,
+                              let long = viewModel.long else { return }
                         
-                            alertsviewModel.pendingLat = lat
-                            alertsviewModel.pendingLong = long
-                            alertsviewModel.isCreatingFromHome = true
-                            addToAlerts = true
+                        Task {
+                            if alertsviewModel.hasAlert(lat: lat, long: long) {
+                                
+                                await alertsviewModel.deleteAlertForLocation(
+                                    lat: lat,
+                                    long: long
+                                )
+                            } else {
+                                
+                                alertsviewModel.pendingLat = lat
+                                alertsviewModel.pendingLong = long
+                                alertsviewModel.isCreatingFromHome = true
+                                addToAlerts = true
+                            }
                         }
                     }
-                }
-            label: {
+                label: {
                     Image(systemName:
-                        alertsviewModel.hasAlert(
-                            lat: viewModel.lat,
-                            long: viewModel.long
-                        )
-                        ? "bell.fill"
-                        : "bell"
+                            alertsviewModel.hasAlert(
+                                lat: viewModel.lat,
+                                long: viewModel.long
+                            )
+                          ? "bell.fill"
+                          : "bell"
                     )
                     .foregroundColor(.green)
                 }
                 .disabled(viewModel.lat == nil || viewModel.long == nil)
-            }
-
-
-
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    Task {
-                        await favoritesViewModel.toggleFavorite(
-                            lat: viewModel.lat,
-                            long: viewModel.long
-                        )
-                    }
-                } label: {
-                    Image(systemName:
-                        favoritesViewModel.isFavorite(
-                            lat: viewModel.lat,
-                            long: viewModel.long
-                        )
-                        ? "heart.fill"
-                        : "heart"
-                    ) .foregroundColor(.green)
                 }
-                .disabled(viewModel.lat == nil || viewModel.long == nil)
+                
+                
+                
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        Task {
+                            await favoritesViewModel.toggleFavorite(
+                                lat: viewModel.lat,
+                                long: viewModel.long
+                            )
+                        }
+                    } label: {
+                        Image(systemName:
+                                favoritesViewModel.isFavorite(
+                                    lat: viewModel.lat,
+                                    long: viewModel.long
+                                )
+                              ? "heart.fill"
+                              : "heart"
+                        ) .foregroundColor(.green)
+                    }
+                    .disabled(viewModel.lat == nil || viewModel.long == nil)
+                }
             }
-
         }.navigationDestination(isPresented: $addToAlerts){
             Alerts()
         }
