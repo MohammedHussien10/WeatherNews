@@ -13,25 +13,20 @@ final class WeatherCacheManager {
 
     private let fileManager = FileManager.default
     private let cacheFileName = "weather_cache.json"
-    // TTL بالثواني (مثلاً ساعة)
     private let cacheTTL: TimeInterval = 3600
 
-    // in-memory cache
     private var cachedPayload: CachedWeather?
-
     private var cacheURL: URL {
         let folder = fileManager.urls(for: .cachesDirectory, in: .userDomainMask)[0]
         return folder.appendingPathComponent(cacheFileName)
     }
 
-    // MARK: - Payload (wrapper)
     private struct CachedWeather: Codable {
         let weather: WeatherResponse
         let forecast: ForecastResponse
         let lastUpdated: Date
     }
 
-    // MARK: - Save
     func save(weather: WeatherResponse, forecast: ForecastResponse) {
         let payload = CachedWeather(weather: weather, forecast: forecast, lastUpdated: Date())
         cachedPayload = payload
@@ -44,14 +39,11 @@ final class WeatherCacheManager {
         }
     }
 
-    // MARK: - Load (returns tuple or nil)
     func load() -> (WeatherResponse, ForecastResponse, Date)? {
-        // check memory first
         if let payload = cachedPayload {
             return (payload.weather, payload.forecast, payload.lastUpdated)
         }
 
-        // check disk
         guard fileManager.fileExists(atPath: cacheURL.path) else { return nil }
 
         do {
@@ -65,13 +57,11 @@ final class WeatherCacheManager {
         }
     }
 
-    // MARK: - Clear
     func clear() {
         cachedPayload = nil
         try? fileManager.removeItem(at: cacheURL)
     }
 
-    // MARK: - TTL validation
     func isCacheValid() -> Bool {
         if let payload = cachedPayload {
             return Date().timeIntervalSince(payload.lastUpdated) < cacheTTL
@@ -82,7 +72,6 @@ final class WeatherCacheManager {
         return false
     }
 
-    // Optional helper to get cached objects (nil if not exist)
     func getCachedWeather() -> (WeatherResponse, ForecastResponse)? {
         if let payload = cachedPayload {
             return (payload.weather, payload.forecast)

@@ -36,12 +36,12 @@ struct RowOfAlertsList: View {
                                     .font(.caption)
                             }
                             
-                            Spacer()
-                            if alert.isActive {
-                                Button("Stop") {
-                                    viewModel.stopAlert(id: alert.id)
-                                }.tint(.red)
-                            }
+//                            Spacer()
+//                            if alert.isActive {
+//                                Button("Stop") {
+//                                    viewModel.stopAlert(id: alert.id)
+//                                }.tint(.red)
+//                            }
                         }
                         
                         
