@@ -11,7 +11,7 @@ struct CircleLoading: View {
     
     var body: some View {
         ZStack {
-            Color.black.opacity(0.35)
+            Color.clear
                 .ignoresSafeArea()
             
             VStack(spacing: 16) {

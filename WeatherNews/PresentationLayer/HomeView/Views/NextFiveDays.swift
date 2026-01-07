@@ -22,7 +22,7 @@ struct NextFiveDays: View {
                     .foregroundColor(.white)
                     .padding(.horizontal)
                 
-                ScrollView(.vertical,showsIndicators: false){
+              
                     
                     if let forecastList = forecast {
                     ForEach(helper.getNextFiveDays(list: forecastList), id: \.dt) { item in
@@ -51,7 +51,7 @@ struct NextFiveDays: View {
                         .padding(.horizontal)
                     }
                 }
-            }
+            
             } .padding(.bottom, 10)
         }
     }

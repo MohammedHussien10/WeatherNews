@@ -38,11 +38,13 @@ struct Main:Codable{
     let temp:Double
     let humidity:Int
     let pressure :Int
+    let feels_like:Double
 }
 
 struct Wind:Codable{
     let speed:Double
 }
+
 
 struct Clouds:Codable{
     let all:Int
@@ -50,7 +52,6 @@ struct Clouds:Codable{
 struct Sys: Codable {
     let country: String?
 }
-
 
 struct ForecastResponse:Codable{
     let cod: String
@@ -69,6 +70,7 @@ struct City:Codable{
     let id:Int
     let name:String
     let coord:Coord
+    let population:Int
     let country :String
     let timezone: Int
 }
