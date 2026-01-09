@@ -188,7 +188,7 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
             return AnyView(
                 LinearGradient(
                     colors: isDark
-                    ? [.white.opacity(0.4), .gray]
+                    ? [.white.opacity(0.4), .blue]
                     : [.white, .blue.opacity(0.2)],
                     startPoint: .top,
                     endPoint: .bottom

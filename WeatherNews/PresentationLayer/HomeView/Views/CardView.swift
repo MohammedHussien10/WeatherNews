@@ -27,7 +27,7 @@ struct CardView: View {
         .frame(width: 120, height: 120)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.blue.opacity(0.2))
+                .fill(Color.blue.opacity(0.3))
                 .shadow(radius: 3)
         )
     }
