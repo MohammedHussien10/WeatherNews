@@ -10,6 +10,9 @@ import SwiftUI
 import MapKit
 final class FavoritesViewModel:ObservableObject{
     @Published var favorites:[FavouritesModel] = []
+    @Published var showToast = false
+    @Published var toastMessage = ""
+
      let getWeatherUseCase: UseCaseWeather
     
     init(getWeatherUseCase: UseCaseWeather) {
@@ -73,12 +76,14 @@ final class FavoritesViewModel:ObservableObject{
             abs(existing.longitude - fav.longitude) < 0.0001
             
         }
-        if !isDuplicate{
+        if !isDuplicate {
             if Task.isCancelled { return }
             await addFavorite(place: fav)
-        }else {
-            print("Favorite already exists!")
+        } else {
+            toastMessage = "Location already in Favorites"
+            showToast = true
         }
+
     }
     @MainActor
     func isFavorite(lat: Double?, long: Double?) -> Bool {

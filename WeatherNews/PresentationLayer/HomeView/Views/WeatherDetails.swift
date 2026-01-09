@@ -63,6 +63,7 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                                 timezone: viewModel.forecast?.city.timezone ?? 0,
                                 temperatureUnit: viewModel.temperatureUnit
                             )
+
                     }.frame(maxWidth: .infinity,maxHeight: .infinity)
                     }
                     
@@ -70,7 +71,7 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                 .task(id: viewModel.lat) {
                     guard let lat = viewModel.lat,
                           let long = viewModel.long else { return }
-                    
+                  
                     await alertsviewModel.getNameOfCityOrCountry(lat: lat, long: long)
                 }
             .toolbar {
@@ -138,6 +139,7 @@ struct WeatherDetailsView<VM: WeatherDetailsVMProtocol>: View {
                     Alerts()
                 }
                 
+         
                 
             }
             

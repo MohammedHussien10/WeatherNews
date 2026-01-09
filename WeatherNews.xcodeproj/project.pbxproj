@@ -42,6 +42,7 @@
 		224DBD512F01973600B280C5 /* Dik_Voice.wav in Resources */ = {isa = PBXBuildFile; fileRef = 224DBD502F01973600B280C5 /* Dik_Voice.wav */; };
 		224DBD532F01AF2100B280C5 /* Battleship_alarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = 224DBD522F01AF2100B280C5 /* Battleship_alarm.wav */; };
 		224DBD552F01B7DF00B280C5 /* WeatherCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DBD542F01B7DF00B280C5 /* WeatherCacheManager.swift */; };
+		2251C35A2F116D9B0075161E /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2251C3592F116D9B0075161E /* ToastView.swift */; };
 		22575C612ECB20B7001D40BE /* GeneralDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22575C602ECB20B7001D40BE /* GeneralDetails.swift */; };
 		22575C642ECB4679001D40BE /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22575C632ECB4679001D40BE /* Kingfisher */; };
 		226DCD132F05C5D500AC43F7 /* RowOfAlertsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226DCD122F05C5D500AC43F7 /* RowOfAlertsList.swift */; };
@@ -120,6 +121,7 @@
 		224DBD502F01973600B280C5 /* Dik_Voice.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Dik_Voice.wav; sourceTree = "<group>"; };
 		224DBD522F01AF2100B280C5 /* Battleship_alarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Battleship_alarm.wav; sourceTree = "<group>"; };
 		224DBD542F01B7DF00B280C5 /* WeatherCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCacheManager.swift; sourceTree = "<group>"; };
+		2251C3592F116D9B0075161E /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		22575C602ECB20B7001D40BE /* GeneralDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralDetails.swift; sourceTree = "<group>"; };
 		226DCD122F05C5D500AC43F7 /* RowOfAlertsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowOfAlertsList.swift; sourceTree = "<group>"; };
 		227F9A702ECAFC7F00322A25 /* AppAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembly.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 				2205E9D42EA8003D0038A2A2 /* Favorites.swift */,
 				221A34282ED0CC01008B40FF /* FAB.swift */,
 				22ADC30D2ED63EB400C4DE3D /* RowOfFavoritesList.swift */,
+				2251C3592F116D9B0075161E /* ToastView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				227F9A712ECAFC7F00322A25 /* AppAssembly.swift in Sources */,
 				223930D12EB641670004DD19 /* WeatherApiService.swift in Sources */,
 				2216926F2EF1D45600D6C2B4 /* AlertsViewModel.swift in Sources */,
+				2251C35A2F116D9B0075161E /* ToastView.swift in Sources */,
 				22CA8B0A2EBAAC990083592E /* UseCaseWeather.swift in Sources */,
 				2295E7E82F0D3D6200ADA1F2 /* CardView.swift in Sources */,
 				22ADC3102ED64C7900C4DE3D /* FavouritesModel.swift in Sources */,

@@ -17,6 +17,7 @@ struct Favorites: View {
                 FAB{
                     showMap = true
                 }
+  
             }.navigationTitle("Favorites")
                 .task {
                     await viewModel.loadFavorites()
@@ -26,7 +27,25 @@ struct Favorites: View {
                         
                     }.environmentObject(viewModel)
                     
+                }.overlay(alignment: .bottom) {
+                    if viewModel.showToast {
+                        ToastView(message: viewModel.toastMessage)
+                            .padding(.bottom, 70)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                            .zIndex(100)
+                    }
+                }.onChange(of: viewModel.showToast) { show in
+                    if show {
+                        Task {
+                            try? await Task.sleep(for: .seconds(2))
+                            withAnimation {
+                                viewModel.showToast = false
+                            }
+                        }
+                    }
                 }
+
+
         }
     }
 }
