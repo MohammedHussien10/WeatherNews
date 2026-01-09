@@ -22,7 +22,7 @@ struct HourlyDetails: View {
             Text("Hourly Details")
                 .font(.title2)
                 .fontWeight(.bold)
-                .foregroundColor(.white)
+                .foregroundColor(Color.init(hex: "#5b5b5b"))
                 .padding(.horizontal)
 
             ScrollView(.horizontal,showsIndicators: false){

@@ -19,11 +19,10 @@ struct HomeView: View {
                 )
             }
         
-    }.toolbarBackground(Color.blue, for:.navigationBar)
-    .toolbarBackground(Color.blue, for: .tabBar)
-    .toolbarColorScheme(.dark, for: .navigationBar)
+    }
     .navigationBarTitleDisplayMode(.inline)
-
+    .toolbarBackground(.clear, for: .tabBar)
+    .toolbarBackground(.visible, for: .tabBar)
 
 
 }

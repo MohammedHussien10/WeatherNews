@@ -16,6 +16,7 @@ struct GeneralDetails: View {
     let fallbackCityName: String?
     let fallbackCountryName: String?
     private let helper: HelperWeatherDetails = HelperWeatherDetails()
+
     private var windText: String {
         String(
             format: "%.1f %@",
@@ -23,6 +24,7 @@ struct GeneralDetails: View {
             windSpeedUnit.shortName
         )
     }
+    
 
     var body: some View {
         VStack(alignment:.center){
@@ -48,7 +50,6 @@ struct GeneralDetails: View {
 
                     Text(locationName)
                         .font(.title3)
-                    weatherIcon(weather.weather.first?.icon.weatherIconURL)
                     Text(
                         String(format: "%.0f %@", weather.main.temp, temperatureUnit.displayShort)
                     )
@@ -118,6 +119,7 @@ struct GeneralDetails: View {
    
         }
     }
+    
 }
 
 //#Preview {

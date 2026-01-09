@@ -176,8 +176,8 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     }
     @MainActor
     func fetchWeatherUsingGPS() async {
-        fetchTask?.cancel()
-        locationSource = .gps
+      fetchTask?.cancel()
+   //   locationSource = .gps
         do{
             let coordinate = try await locationService.requestCurrentLocation()
             

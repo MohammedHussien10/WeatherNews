@@ -86,6 +86,7 @@ struct SettingsView: View {
                     case .none:
                            break
                     case .gps:
+                        showMap = false
                         Task { await homeViewModel.fetchWeatherUsingGPS() }
                         
                     case .map:

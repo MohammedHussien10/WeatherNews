@@ -19,7 +19,7 @@ struct NextFiveDays: View {
                 Text("Next 5 Days")
                     .font(.title2)
                     .fontWeight(.bold)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color.init(hex: "#5b5b5b"))
                     .padding(.horizontal)
                 
               
@@ -46,7 +46,7 @@ struct NextFiveDays: View {
                             )
                         }
                         .padding()
-                        .background(Color.white.opacity(0.2))
+                        .background(Color.blue.opacity(0.2))
                         .cornerRadius(12)
                         .padding(.horizontal)
                     }

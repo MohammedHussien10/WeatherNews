@@ -16,20 +16,20 @@ struct CardView: View {
         VStack(spacing: 8) {
             icon
                 .font(.system(size: 28))
-                .foregroundColor(.blue)
+                .foregroundColor(Color.init(hex: "#6f6f6f"))
 
             Text(title)
                 .font(.headline)
 
             Text(subtitle)
                 .font(.caption)
-                .foregroundColor(.gray)
         }
         .frame(width: 120, height: 120)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemBackground))
+                .fill(Color.blue.opacity(0.2))
                 .shadow(radius: 3)
         )
     }
 }
+
