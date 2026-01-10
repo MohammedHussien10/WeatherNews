@@ -23,6 +23,7 @@ struct Alerts: View {
             }
         }.task {
             await AlertManager.shared.requestPermission()
+           
         }
 .navigationTitle("Weather Alerts")
 .task {
@@ -47,8 +48,10 @@ struct Alerts: View {
                 DatePicker(
                     "Select alert time",
                     selection: $alertDate,
+                    in: Date()...,
                     displayedComponents: [.date, .hourAndMinute]
                 )
+
                 .datePickerStyle(.graphical)
 
                 Picker("Alert Type", selection: $type) {
@@ -61,20 +64,44 @@ struct Alerts: View {
                     if let lat = viewModel.pendingLat,
                        let long = viewModel.pendingLong {
 
-                        viewModel.addAlert(
-                            city: viewModel.cityOfAlert!, lat: lat,
+                        let success = viewModel.addAlert(
+                            city: viewModel.cityOfAlert,
+                            lat: lat,
                             long: long,
                             dateOfAlert: alertDate,
                             type: type
                         )
-                        showDatePicker = false
-                    }
 
+                        if success {
+                            showDatePicker = false
+                        }
+                    }
                 }
+
                 .disabled(viewModel.cityOfAlert == nil)
             }
             .padding()
+            
+            
+            if viewModel.showToast {
+                     ToastView(message: viewModel.toastMessage)
+                         .padding(.bottom, 24)
+                         .transition(.move(edge: .bottom).combined(with: .opacity))
+                         .zIndex(10)
+                 }
+            
         }
+        .onChange(of: viewModel.showToast) { show in
+            if show {
+                Task {
+                    try? await Task.sleep(for: .seconds(2))
+                    withAnimation {
+                        viewModel.showToast = false
+                    }
+                }
+            }
+        }
+
 
 
         

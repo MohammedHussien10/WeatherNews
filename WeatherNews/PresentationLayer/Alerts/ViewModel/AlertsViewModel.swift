@@ -14,6 +14,8 @@ final class AlertsViewModel:ObservableObject{
     @Published var pendingLat: Double?
     @Published var pendingLong: Double?
     @Published var isCreatingFromHome = false
+    @Published var showToast = false
+    @Published var toastMessage = ""
     private let storage: AlertsStorage
     var sortedAlerts: [WeatherAlert] {
         alerts.sorted {
@@ -37,12 +39,16 @@ final class AlertsViewModel:ObservableObject{
         long: Double?,
         dateOfAlert: Date,
         type: AlertType
-    ) {
-        guard let city,
-              let lat,
-              let long,
-              dateOfAlert > Date()
-        else { return }
+    )->Bool {
+        
+        guard dateOfAlert > Date() else {
+            toastMessage = "⏰ Please select a future time"
+            showToast = true
+            return false
+        }
+        
+        
+        guard let city, let lat, let long else { return false }
 
         let alert = WeatherAlert(
             id: UUID(),
@@ -62,6 +68,7 @@ final class AlertsViewModel:ObservableObject{
         pendingLat = nil
         pendingLong = nil
         isCreatingFromHome = false
+        return true
     }
 
 

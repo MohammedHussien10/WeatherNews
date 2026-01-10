@@ -100,5 +100,68 @@
             landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A78363DF-5F11-48F1-B88E-1D6FAF576721"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeatherNews/DataLayer/AlertManager/AlertManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "56"
+            endingLineNumber = "56"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Locations>
+               <Location
+                  uuid = "A78363DF-5F11-48F1-B88E-1D6FAF576721 - b2abbfa214ebf6eb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WeatherNews.NotificationDelegate.__allocating_init() -&gt; WeatherNews.NotificationDelegate"
+                  moduleName = "WeatherNews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/MyFiles/IOS%20Projects/WeatherNews/WeatherNews/DataLayer/AlertManager/AlertManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "7">
+               </Location>
+               <Location
+                  uuid = "A78363DF-5F11-48F1-B88E-1D6FAF576721 - 4c7bb71b7d0db931"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WeatherNews.NotificationDelegate.init() -&gt; WeatherNews.NotificationDelegate"
+                  moduleName = "WeatherNews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/MyFiles/IOS%20Projects/WeatherNews/%3Ccompiler-generated%3E"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "24">
+               </Location>
+               <Location
+                  uuid = "A78363DF-5F11-48F1-B88E-1D6FAF576721 - 124995a5f1a0c8c2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WeatherNews.NotificationDelegate.__deallocating_deinit"
+                  moduleName = "WeatherNews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Volumes/MyFiles/IOS%20Projects/WeatherNews/WeatherNews/DataLayer/AlertManager/AlertManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "24">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
