@@ -21,7 +21,7 @@ struct RowOfFavoritesList: View {
                     "no_favorites".localized,
                     systemImage: "heart",
                     description: 
-                        Text("tap ".localized)
+                        Text("tap".localized)
                     + Text(Image(systemName: "heart"))
                     + Text( " to_add_favorite".localized)
                 )

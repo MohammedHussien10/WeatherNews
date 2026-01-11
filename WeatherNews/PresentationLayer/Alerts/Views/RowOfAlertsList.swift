@@ -19,7 +19,7 @@ struct RowOfAlertsList: View {
                      "no_alerts".localized,
                      systemImage: "bell",
                      description:
-                        Text("tap ".localized)
+                        Text("tap".localized)
                          + Text(Image(systemName: "bell"))
                      + Text(" to_add_alert".localized)
                  )

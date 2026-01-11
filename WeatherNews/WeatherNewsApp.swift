@@ -12,7 +12,7 @@ struct WeatherNewsApp: App {
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @StateObject var languageManager = LanguageManager()
     let container = AppAssembly.container
-     
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var homeVM: HomeViewModel
     @StateObject var favoritesVM: FavoritesViewModel
     @StateObject var alertsVM: AlertsViewModel

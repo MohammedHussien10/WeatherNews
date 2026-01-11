@@ -104,16 +104,16 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "A78363DF-5F11-48F1-B88E-1D6FAF576721"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "WeatherNews/DataLayer/AlertManager/AlertManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "56"
-            endingLineNumber = "56"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            startingLineNumber = "81"
+            endingLineNumber = "81"
+            landmarkName = "NotificationDelegate"
+            landmarkType = "3">
             <Locations>
                <Location
                   uuid = "A78363DF-5F11-48F1-B88E-1D6FAF576721 - b2abbfa214ebf6eb"

@@ -27,8 +27,8 @@
 "population" = "عدد السكان";
 "feels_like" = "المحسوسة";
 "cloudiness" = "الغيوم";
-"tap " = " اضغط";
-" to_add_favorite" = "لإضافة موقع مفضل ";
+"tap" = " اضغط ";
+" to_add_favorite" = " لإضافة موقع مفضل ";
 "remove_favorite_title" = "حذف من المفضلة";
 "delete" = "حذف";
 "cancel" = "إلغاء";
@@ -39,7 +39,7 @@
 "select_alert_time" = "اختر وقت التنبيه";
 "alert_type" = "نوع التنبيه";
 "confirm" = "تأكيد";
-" to_add_alert" = "لإضافة تنبيه طقس ";
+" to_add_alert" = " لإضافة تنبيه طقس ";
 "delete_alert_title" = "حذف التنبيه";
 "delete_alert_message" = "حذف التنبيه لموقع %@؟";
 "toast_future_time" = "⏰ من فضلك اختر وقتًا في المستقبل";

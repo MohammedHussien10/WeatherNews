@@ -27,7 +27,7 @@
 "population" = "Population";
 "feels_like" = "Feels Like";
 "cloudiness" = "Cloudiness";
-"tap " = "Tap";
+"tap" = "Tap ";
 " to_add_favorite" = " to add a favorite location";
 "remove_favorite_title" = "Remove Favorite";
 "delete" = "Delete";
