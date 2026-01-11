@@ -42,7 +42,7 @@ final class AlertsViewModel:ObservableObject{
     )->Bool {
         
         guard dateOfAlert > Date() else {
-            toastMessage = "⏰ Please select a future time"
+            toastMessage = "toast_future_time".localized
             showToast = true
             return false
         }
@@ -103,7 +103,7 @@ final class AlertsViewModel:ObservableObject{
                 cityOfAlert = placemark.locality
                     ?? placemark.subAdministrativeArea
                     ?? placemark.country
-                    ?? "Unknown"
+                ?? "unknown".localized
             }
         } catch {
             print("Reverse geocoding failed: \(error)")

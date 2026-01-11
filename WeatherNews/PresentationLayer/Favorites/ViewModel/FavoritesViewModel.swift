@@ -51,8 +51,8 @@ final class FavoritesViewModel:ObservableObject{
      }
     @MainActor
     func resolveFallbackCityAndCountryIfNeeded(lat: Double, long: Double) async{
-        var cityName = "Unknown"
-        var countryName = "Unknown"
+        var cityName = "unknown".localized
+        var countryName = "unknown".localized
         
         let location = CLLocation(latitude: lat, longitude: long)
         let geocoder = CLGeocoder()
@@ -60,8 +60,8 @@ final class FavoritesViewModel:ObservableObject{
         do{
             let placemarks = try await geocoder.reverseGeocodeLocation(location)
             if let placemark = placemarks.first{
-                cityName = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.country ?? "Unknown"
-                countryName = placemark.country ?? "Unknown"  
+                cityName = placemark.locality ?? placemark.subAdministrativeArea ?? placemark.country ?? "unknown".localized
+                countryName = placemark.country ?? "unknown".localized
                 
             }
         }catch{
@@ -80,7 +80,7 @@ final class FavoritesViewModel:ObservableObject{
             if Task.isCancelled { return }
             await addFavorite(place: fav)
         } else {
-            toastMessage = "Location already in Favorites"
+            toastMessage = "toast_already_favorite".localized
             showToast = true
         }
 

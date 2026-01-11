@@ -20,7 +20,7 @@ struct WeatherContainer: View {
                 HomeView()
             }
             .tabItem {
-                Label("Home", systemImage: "cloud.sun.fill")
+                Label("home".localized, systemImage: "cloud.sun.fill")
                   
             }
 
@@ -29,7 +29,7 @@ struct WeatherContainer: View {
                 Alerts()
             }
             .tabItem {
-                Label("Alerts", systemImage: "alarm.fill")
+                Label("weather_alerts".localized, systemImage: "alarm.fill")
                 
             }
   
@@ -38,7 +38,7 @@ struct WeatherContainer: View {
                 Favorites()
             }
             .tabItem {
-                Label("Favorites", systemImage: "heart.fill")
+                Label("favorites_title".localized, systemImage: "heart.fill")
                    
             }
 
@@ -47,7 +47,7 @@ struct WeatherContainer: View {
                 SettingsView()
             }
             .tabItem {
-                Label("Settings", systemImage: "gearshape.fill")
+                Label("settings_title".localized, systemImage: "gearshape.fill")
                   
             }
        

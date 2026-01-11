@@ -19,7 +19,7 @@ struct HourlyDetails: View {
 
     var body: some View {
         VStack(alignment: .leading,spacing: 12){
-            Text("Hourly Details")
+            Text("hourly_details".localized)
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(Color.init(hex: "#5b5b5b"))
@@ -30,15 +30,21 @@ struct HourlyDetails: View {
                     if let forecast = forecast{
                         ForEach(forecast.prefix(20),id:\.dt){ item in
                             VStack(spacing:8){
-                                Text(helper.formattedTime(from: item.dt, timezone: timezone)).font(.caption)
+                                Text(helper.formattedTime(from: item.dt, timezone: timezone, language: helper.language)).font(.caption)
                                 
                                 if let icon = item.weather.first?.icon{
                                     KFImage(icon.weatherIconURL).resizable()
                                         .scaledToFit().frame(width: 50,height:50)
                                 }
                                 
-                                Text(String(format: "%.0f %@", item.main.temp, temperatureUnit.displayShort))
-                                    .font(.headline)
+                                Text(
+                                    helper.localizedTemperature(
+                                        item.main.temp,
+                                        unit: temperatureUnit,
+                                        language: helper.language
+                                    )
+                                )
+                                .font(.headline)
                                 
                             }.frame(width: 120, height: 150).background(Color.blue.opacity(0.2)).cornerRadius(12)
                         }

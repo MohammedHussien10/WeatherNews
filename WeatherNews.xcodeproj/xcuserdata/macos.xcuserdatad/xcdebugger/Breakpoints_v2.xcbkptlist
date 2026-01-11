@@ -163,5 +163,53 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "850D1139-5D8F-4325-A800-4CE11812DDE9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "WeatherNews/PresentationLayer/HomeView/ViewModel/HomeViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
+            landmarkName = "formattedDate(from:timezone:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "850D1139-5D8F-4325-A800-4CE11812DDE9 - e22b38989a9ced94"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WeatherNews.HelperWeatherDetails.formattedDate(from: Swift.Int, timezone: Swift.Int) -&gt; Swift.String"
+                  moduleName = "WeatherNews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macos/Downloads/WeatherNews/WeatherNews/PresentationLayer/HomeView/ViewModel/HomeViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "260"
+                  endingLineNumber = "260"
+                  offsetFromSymbolStart = "559">
+               </Location>
+               <Location
+                  uuid = "850D1139-5D8F-4325-A800-4CE11812DDE9 - e22b38989a9ced94"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "WeatherNews.HelperWeatherDetails.formattedDate(from: Swift.Int, timezone: Swift.Int) -&gt; Swift.String"
+                  moduleName = "WeatherNews"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macos/Downloads/WeatherNews/WeatherNews/PresentationLayer/HomeView/ViewModel/HomeViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "260"
+                  endingLineNumber = "260"
+                  offsetFromSymbolStart = "279">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

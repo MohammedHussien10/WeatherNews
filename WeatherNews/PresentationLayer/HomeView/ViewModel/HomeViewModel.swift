@@ -144,9 +144,9 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     }
     
 
-        func formattedTime(from timestamp: Int, timezone: Int) -> String {
-            helper.formattedTime(from: timestamp, timezone: timezone)
-        }
+    func formattedTime(from timestamp: Int, timezone: Int ,language: AppLanguage) -> String {
+        helper.formattedTime(from: timestamp, timezone: timezone, language: language)
+    }
 
         func formattedDate(from timestamp: Int, timezone: Int) -> String {
             helper.formattedDate(from: timestamp, timezone: timezone)
@@ -213,7 +213,10 @@ enum LocationSource {
 
 
 struct HelperWeatherDetails {
-    
+    @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
+    var language: AppLanguage {
+        AppLanguage(rawValue: languageRawValue) ?? .english
+    }
     func getNextFiveDays (list:[ForecastItem]) -> [ForecastItem]{
         var result : [ForecastItem] = []
         var addedDates:Set<String> = []
@@ -241,12 +244,15 @@ struct HelperWeatherDetails {
     
     //Convert dt to Real Time Date
     
-    func formattedTime(from timestamp: Int, timezone: Int) -> String {
+    func formattedTime(from timestamp: Int, timezone: Int ,  language: AppLanguage) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
         let formatter = DateFormatter()
-        formatter.dateFormat = "h:mm a"
         formatter.timeZone = TimeZone(secondsFromGMT: timezone)
+        formatter.locale = Locale(identifier: language.apiParameter)
+        formatter.dateFormat = "h:mm a"
         return formatter.string(from: date)
+        
+        
     }
 
     //Convert dt to Real Time Time
@@ -257,11 +263,10 @@ struct HelperWeatherDetails {
           
           formatter.dateFormat = "E, d MMM"
           formatter.timeZone = TimeZone(secondsFromGMT: timezone)
-          formatter.locale = Locale.current
+          formatter.locale = Locale(identifier: language.apiParameter)
           
           return formatter.string(from: date)
     }
-
     //Convert convert WindSpeed
     
     func convertWindSpeed(_ speed: Double, from apiUnits: TemperatureUnit, to windUnit: WindSpeedUnit) -> Double {
@@ -290,6 +295,26 @@ struct HelperWeatherDetails {
     }
 
     
+    func localizedTemperature(
+        _ value: Double,
+        unit: TemperatureUnit,
+        language: AppLanguage
+    ) -> String {
+
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 0
+        formatter.locale = Locale(identifier: language.apiParameter)
+
+        let number = formatter.string(from: NSNumber(value: value)) ?? "\(Int(value))"
+        return String(
+            format: "temperature_value".localized,
+            number,
+            unit.displayShort
+        )
+    }
+    
+    
 }
 // MARK: - Units Enums
 enum TemperatureUnit: String, SettingOption {
@@ -298,7 +323,17 @@ enum TemperatureUnit: String, SettingOption {
     case fahrenheit = "Fahrenheit (°F)"
     
     var id: String { rawValue }
-    var displayName: String {rawValue}
+    var displayName: String {
+         switch self {
+         case .kelvin:
+             return "temp_kelvin".localized
+         case .celsius:
+             return "temp_celsius".localized
+         case .fahrenheit:
+             return "temp_fahrenheit".localized
+         }
+     }
+
     
     var apiParameter: String {
            switch self {
@@ -309,12 +344,15 @@ enum TemperatureUnit: String, SettingOption {
        }
     
     var displayShort: String {
-        switch self {
-        case .celsius: return "°C"
-        case .fahrenheit: return "°F"
-        case .kelvin: return "°K"
-        }
-    }
+          switch self {
+          case .celsius:
+              return "temp_celsius_short".localized
+          case .fahrenheit:
+              return "temp_fahrenheit_short".localized
+          case .kelvin:
+              return "temp_kelvin_short".localized
+          }
+      }
 
 }
 
@@ -323,24 +361,36 @@ enum WindSpeedUnit: String, SettingOption {
     case milesPerHour = "Miles/Hour"
     
     var id: String { rawValue }
-    var displayName: String { rawValue }
+    var displayName: String {
+        switch self {
+        case .meterPerSecond:
+            return "wind_meter_sec".localized
+        case .milesPerHour:
+            return "wind_miles_hour".localized
+        }
+    }
     
     var shortName: String {
             switch self {
-            case .meterPerSecond: return "m/s"
-            case .milesPerHour: return "mph"
+            case .meterPerSecond: return "wind_unit_mps_short".localized
+            case .milesPerHour: return "wind_unit_mph_short".localized
             }
         }
     
 }
 
 
-enum AppLanguage: String, SettingOption {
-    case english = "English"
-    case arabic = "العربية"
+enum AppLanguage: String, SettingOption,CaseIterable {
+    case english = "en"
+    case arabic = "ar"
     
     var id: String { rawValue }
-    var displayName: String { rawValue }
+    var displayName: String {
+        switch self {
+        case .english: return "english".localized
+        case .arabic: return "arabic".localized
+        }
+    }
     
     var apiParameter: String {
             switch self {
@@ -365,5 +415,4 @@ enum LocationMode: String, SettingOption {
 protocol SettingOption: CaseIterable,Identifiable,RawRepresentable,Hashable where RawValue == String{
     var displayName:String{get}
 }
-
 

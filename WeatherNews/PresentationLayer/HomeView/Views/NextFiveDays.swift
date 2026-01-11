@@ -16,7 +16,7 @@ struct NextFiveDays: View {
     
     var body: some View {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Next 5 Days")
+                Text("next_5_days".localized)
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(Color.init(hex: "#5b5b5b"))
@@ -42,7 +42,11 @@ struct NextFiveDays: View {
                             }
 
                             Text(
-                                String(format: "%.0f %@", item.main.temp, temperatureUnit.displayShort)
+                                helper.localizedTemperature(
+                                    item.main.temp,
+                                    unit: temperatureUnit,
+                                    language: helper.language
+                                )
                             )
                         }
                         .padding()

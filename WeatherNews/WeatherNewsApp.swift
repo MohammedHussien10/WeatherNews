@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct WeatherNewsApp: App {
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
-    
+    @StateObject var languageManager = LanguageManager()
     let container = AppAssembly.container
      
     @StateObject var homeVM: HomeViewModel
@@ -34,7 +34,7 @@ struct WeatherNewsApp: App {
         WindowGroup {
             WeatherContainer().preferredColorScheme(isDarkMode ? .dark : .light).environmentObject(homeVM) .environmentObject(favoritesVM).task {
                 await favoritesVM.loadFavorites()
-            }.environmentObject(alertsVM)
+            }.environmentObject(alertsVM).environmentObject(languageManager)
         }
     }
     

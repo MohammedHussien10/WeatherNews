@@ -18,10 +18,14 @@ struct RowOfFavoritesList: View {
             
             if viewModel.favorites.isEmpty {
                 ContentUnavailableView(
-                    "No Favorite Locations",
+                    "no_favorites".localized,
                     systemImage: "heart",
-                    description: Text( "Tap + to add a favorite location")
+                    description: 
+                        Text("tap ".localized)
+                    + Text(Image(systemName: "heart"))
+                    + Text( " to_add_favorite".localized)
                 )
+          
             } else {
                 
                 List {
@@ -54,8 +58,8 @@ struct RowOfFavoritesList: View {
                         }
                     }
                     
-                }.alert("Remove Favorite", isPresented: $showDeleteAlert) {
-                    Button("Delete", role: .destructive) {
+                }.alert("remove_favorite_title".localized, isPresented: $showDeleteAlert) {
+                    Button("delete".localized, role: .destructive) {
                         if let fav = favoriteToDelete {
                             Task {
                                 await viewModel.deleteFavorite(id: fav.id)
@@ -64,11 +68,17 @@ struct RowOfFavoritesList: View {
                         }
                     }
                     
-                    Button("Cancel", role: .cancel) {
+                    Button("cancel".localized, role: .cancel) {
                         favoriteToDelete = nil
                     }
                 } message: {
-                    Text("Remove \(favoriteToDelete?.city ?? "this location") from favorites?")
+                    Text(
+                           String(
+                               format: "remove_favorite_message".localized,
+                               favoriteToDelete?.city ?? "unknown".localized
+                           )
+                       )
+                    
                 }
                 
             }

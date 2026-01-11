@@ -18,7 +18,7 @@ struct Favorites: View {
                     showMap = true
                 }
   
-            }.navigationTitle("Favorites")
+            }.navigationTitle("favorites_title".localized)
                 .task {
                     await viewModel.loadFavorites()
                 }

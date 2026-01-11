@@ -49,6 +49,8 @@
 		227F9A6E2ECAFC3500322A25 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 227F9A6D2ECAFC3500322A25 /* Swinject */; };
 		227F9A712ECAFC7F00322A25 /* AppAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227F9A702ECAFC7F00322A25 /* AppAssembly.swift */; };
 		228AF8702ECF37640019C476 /* NextFiveDays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228AF86F2ECF37640019C476 /* NextFiveDays.swift */; };
+		22912CF62F13192C00F1A845 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22912CF52F13192C00F1A845 /* LanguageManager.swift */; };
+		22912CF72F13197500F1A845 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 22912CF92F13197500F1A845 /* Localizable.strings */; };
 		2295E7E82F0D3D6200ADA1F2 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2295E7E72F0D3D6200ADA1F2 /* CardView.swift */; };
 		229B26532EE4A33700A5CC9E /* LocalDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229B26522EE4A33700A5CC9E /* LocalDataSource.swift */; };
 		229B26552EE4A38A00A5CC9E /* LocalDataSourceImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229B26542EE4A38A00A5CC9E /* LocalDataSourceImpl.swift */; };
@@ -126,6 +128,9 @@
 		226DCD122F05C5D500AC43F7 /* RowOfAlertsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowOfAlertsList.swift; sourceTree = "<group>"; };
 		227F9A702ECAFC7F00322A25 /* AppAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAssembly.swift; sourceTree = "<group>"; };
 		228AF86F2ECF37640019C476 /* NextFiveDays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextFiveDays.swift; sourceTree = "<group>"; };
+		22912CF52F13192C00F1A845 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
+		22912CF82F13197500F1A845 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
+		22912CFA2F13197B00F1A845 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2295E7E72F0D3D6200ADA1F2 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		229B26522EE4A33700A5CC9E /* LocalDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSource.swift; sourceTree = "<group>"; };
 		229B26542EE4A38A00A5CC9E /* LocalDataSourceImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataSourceImpl.swift; sourceTree = "<group>"; };
@@ -407,6 +412,7 @@
 		224DBD4E2F0196EC00B280C5 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				22912CF42F1318E300F1A845 /* Localizations */,
 				223E7BBB2F0E054B00261FD2 /* Animations */,
 				224DBD4F2F0196F500B280C5 /* Sounds */,
 			);
@@ -428,6 +434,15 @@
 				227F9A702ECAFC7F00322A25 /* AppAssembly.swift */,
 			);
 			path = "DI Container";
+			sourceTree = "<group>";
+		};
+		22912CF42F1318E300F1A845 /* Localizations */ = {
+			isa = PBXGroup;
+			children = (
+				22912CF92F13197500F1A845 /* Localizable.strings */,
+				22912CF52F13192C00F1A845 /* LanguageManager.swift */,
+			);
+			path = Localizations;
 			sourceTree = "<group>";
 		};
 		22ADC3082ED638B100C4DE3D /* ViewModel */ = {
@@ -608,6 +623,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = 2205E9922EA7E8010038A2A2;
 			packageReferences = (
@@ -636,6 +652,7 @@
 				223E7BC42F0E157700261FD2 /* snowy.json in Resources */,
 				2205E9A62EA7E8040038A2A2 /* Preview Assets.xcassets in Resources */,
 				224DBD512F01973600B280C5 /* Dik_Voice.wav in Resources */,
+				22912CF72F13197500F1A845 /* Localizable.strings in Resources */,
 				2205E9A32EA7E8040038A2A2 /* Assets.xcassets in Resources */,
 				223E7BC72F0E157700261FD2 /* rainy.json in Resources */,
 				223E7BC52F0E157700261FD2 /* cloudy.json in Resources */,
@@ -671,6 +688,7 @@
 				226DCD132F05C5D500AC43F7 /* RowOfAlertsList.swift in Sources */,
 				2244153C2EF0816D00004DB1 /* WeatherDetails.swift in Sources */,
 				22575C612ECB20B7001D40BE /* GeneralDetails.swift in Sources */,
+				22912CF62F13192C00F1A845 /* LanguageManager.swift in Sources */,
 				2229CF692EF8C67500526158 /* LocationService.swift in Sources */,
 				22CA8B0C2EBB06300083592E /* MapView.swift in Sources */,
 				2205E9AB2EA7E8040038A2A2 /* WeatherEntity.xcdatamodeld in Sources */,
@@ -741,6 +759,18 @@
 			targetProxy = 2205E9BB2EA7E8050038A2A2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		22912CF92F13197500F1A845 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				22912CF82F13197500F1A845 /* ar */,
+				22912CFA2F13197B00F1A845 /* en */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		2205E9C22EA7E8050038A2A2 /* Debug */ = {

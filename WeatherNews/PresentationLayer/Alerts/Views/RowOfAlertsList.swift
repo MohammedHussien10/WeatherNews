@@ -16,10 +16,13 @@ struct RowOfAlertsList: View {
             
             if viewModel.alerts.isEmpty {
                 ContentUnavailableView(
-                    "No Alerts",
-                    systemImage: "bell",
-                    description: Text("Tap + to add a weather alert")
-                )
+                     "no_alerts".localized,
+                     systemImage: "bell",
+                     description:
+                        Text("tap ".localized)
+                         + Text(Image(systemName: "bell"))
+                     + Text(" to_add_alert".localized)
+                 )
             } else {
                 
                 
@@ -51,8 +54,8 @@ struct RowOfAlertsList: View {
                     
                 }
             }
-        }.alert("Delete Alert", isPresented: $showDeleteAlert) {
-            Button("Delete", role: .destructive) {
+        }.alert("delete_alert_title".localized, isPresented: $showDeleteAlert) {
+            Button("delete".localized, role: .destructive) {
                 if let alert = alertToDelete {
                     Task {
                         await viewModel.deleteAlert(id: alert.id)
@@ -61,11 +64,16 @@ struct RowOfAlertsList: View {
                 }
             }
 
-            Button("Cancel", role: .cancel) {
+            Button("cancel".localized, role: .cancel) {
                 alertToDelete = nil
             }
         } message: {
-            Text("Delete alert for \(alertToDelete?.city ?? "this location")?")
+            Text(
+                   String(
+                       format: "delete_alert_message".localized,
+                       alertToDelete?.city ?? "unknown".localized
+                   )
+               )
         }
 
     }

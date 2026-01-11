@@ -25,7 +25,7 @@ struct Alerts: View {
             await AlertManager.shared.requestPermission()
            
         }
-.navigationTitle("Weather Alerts")
+        .navigationTitle("weather_alerts".localized)
 .task {
     await viewModel.loadAlerts()
 
@@ -42,11 +42,11 @@ struct Alerts: View {
         }.sheet(isPresented: $showDatePicker) {
             VStack(spacing: 16) {
 
-                Text(viewModel.cityOfAlert ?? "No location selected")
+                Text(viewModel.cityOfAlert ?? "no_location_selected".localized)
                     .font(.headline)
 
                 DatePicker(
-                    "Select alert time",
+                    "select_alert_time".localized,
                     selection: $alertDate,
                     in: Date()...,
                     displayedComponents: [.date, .hourAndMinute]
@@ -54,13 +54,13 @@ struct Alerts: View {
 
                 .datePickerStyle(.graphical)
 
-                Picker("Alert Type", selection: $type) {
+                Picker("alert_type".localized, selection: $type) {
                     ForEach(AlertType.allCases, id: \.self) {
                         Text($0.rawValue.capitalized)
                     }
                 }
 
-                Button("Confirm") {
+                Button("confirm".localized) {
                     if let lat = viewModel.pendingLat,
                        let long = viewModel.pendingLong {
 

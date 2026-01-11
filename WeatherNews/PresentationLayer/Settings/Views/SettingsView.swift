@@ -13,6 +13,7 @@ struct SettingsView: View {
     @AppStorage("windSpeedUnit") private var windSpeedUnitRawValue: String = WindSpeedUnit.meterPerSecond.rawValue
     @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
     @AppStorage("locationMode") private var locationRawValue: String = LocationMode.none.rawValue
+    @EnvironmentObject var languageManager: LanguageManager
     @State private var showMap = false
     @EnvironmentObject var homeViewModel: HomeViewModel
     var body: some View {
@@ -20,7 +21,7 @@ struct SettingsView: View {
             VStack(spacing: 20) {
                 
                 HStack{
-                    Text("Dark Mode").font(.headline)
+                    Text("dark_mode".localized).font(.headline)
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut){
@@ -38,7 +39,7 @@ struct SettingsView: View {
                     }
                 }
                 .padding().background(Color(.secondarySystemBackground)).cornerRadius(12).shadow(radius: 1)
-                PickerCard(title: "Temperature Unit", selectedOption: Binding(
+                PickerCard(title: "temperature_unit".localized, selectedOption: Binding(
                     get: { TemperatureUnit(rawValue: temperatureUnitRawValue) ?? .celsius },
                     set: { temperatureUnitRawValue = $0.rawValue }
                 )).onChange(of: temperatureUnitRawValue) { _ in
@@ -48,30 +49,33 @@ struct SettingsView: View {
                 
                 
                 
-                PickerCard(title: "Wind Speed Unit", selectedOption: Binding(
+                PickerCard(title: "wind_speed_unit".localized, selectedOption: Binding(
                     get: { WindSpeedUnit(rawValue: windSpeedUnitRawValue) ?? .meterPerSecond },
                     set: { windSpeedUnitRawValue = $0.rawValue }
                 )).onChange(of: windSpeedUnitRawValue) { _ in
                     homeViewModel.refetchWindSpeed()
                 }
                 
-                PickerCard(title: "Language", selectedOption: Binding(
+                PickerCard(title: "language".localized, selectedOption: Binding(
                     get: { AppLanguage(rawValue: languageRawValue) ?? .english },
-                    set: { languageRawValue = $0.rawValue }
+                    set: { newValue in
+                        languageRawValue = newValue.rawValue
+                        languageManager.setLanguage(newValue)
+                    }
                 )).onChange(of: languageRawValue) { _ in
                     Task { await homeViewModel.fetchWeather(latitude: homeViewModel.savedLat,
                                                             longitude: homeViewModel.savedLon) }
                 }
                 VStack(spacing: 16) {
                     
-                    Toggle("Use GPS Location", isOn: Binding(
+                    Toggle("use_gps".localized, isOn: Binding(
                         get: { locationRawValue == LocationMode.gps.rawValue },
                         set: { isOn in
                                    locationRawValue = isOn ? LocationMode.gps.rawValue : LocationMode.none.rawValue
                                }
                     ))
                     
-                    Toggle("Use Map Location", isOn: Binding(
+                    Toggle("use_map".localized, isOn: Binding(
                         get: { locationRawValue == LocationMode.map.rawValue },
                         set: { isOn in
                                  locationRawValue = isOn ? LocationMode.map.rawValue : LocationMode.none.rawValue
@@ -102,7 +106,7 @@ struct SettingsView: View {
                     
                     
                     
-                    InfoCard(title: "About App", subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien\nContact Me at:\nEmail: mohammedhussien10101010@gmail.com")
+                    InfoCard(title: "about_app".localized, subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien\nContact Me at:\nEmail: mohammedhussien10101010@gmail.com")
                     
                     
                     
@@ -121,7 +125,7 @@ struct SettingsView: View {
                 }
                 
             }
-            .navigationTitle("Settings")
+            .navigationTitle("settings_title".localized)
         }
     }
     
@@ -194,3 +198,5 @@ extension View {
             .shadow(radius: 1)
     }
 }
+
+// orginal

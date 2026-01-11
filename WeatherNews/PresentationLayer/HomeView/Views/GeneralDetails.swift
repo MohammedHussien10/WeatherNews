@@ -51,7 +51,11 @@ struct GeneralDetails: View {
                     Text(locationName)
                         .font(.title3)
                     Text(
-                        String(format: "%.0f %@", weather.main.temp, temperatureUnit.displayShort)
+                        helper.localizedTemperature(
+                            weather.main.temp,
+                            unit: temperatureUnit,
+                            language: helper.language
+                        )
                     )
                     .font(.largeTitle)
                     Text(weather.weather.first?.description ?? "")
@@ -65,26 +69,27 @@ struct GeneralDetails: View {
                     //weatherIcon(weather.weather.first?.icon.weatherIconURL)
                     VStack{
                         HStack{
-                            Text("Today").font(.headline)
+                            Text("today".localized).font(.headline)
                             Text(helper.formattedDate(from: weather.dt, timezone: weather.timezone)  )
-                            Text(helper.formattedTime(from: weather.dt, timezone: weather.timezone)  )
+                            Text(helper.formattedTime(from: weather.dt, timezone: weather.timezone, language: helper.language)  )
                         }
                         HStack{
                             CardView(
                                 icon: Image(systemName: "wind"),
                                 title: windText,
-                                subtitle: "Wind"
+                                subtitle: "wind".localized
                             )
                             CardView(
                                 icon:Image(systemName: "drop.fill"),
                                 title: String(format: "%d%%", weather.main.humidity),
-                                subtitle: "Humidity"
+                                subtitle: "humidity".localized
+                                
                             )
                             
                             CardView(
                                 icon: Image(systemName: "gauge"),
                                 title: "\(weather.main.pressure) hPa",
-                                subtitle: "Pressure"
+                                subtitle: "pressure".localized
                             )
                             
                        
@@ -94,20 +99,20 @@ struct GeneralDetails: View {
                                 CardView(
                                     icon: Image(systemName: "person.2.fill"),
                                     title: "\(population)",
-                                    subtitle: "Person"
+                                    subtitle: "population".localized
                                 )
                             }
 
                             CardView(
                                 icon:Image(systemName: "thermometer"),
                                 title: String(format: "%.0f %@", weather.main.feels_like,temperatureUnit.displayShort),
-                                subtitle: "Feels like"
+                                subtitle: "feels_like".localized
                             )
                             
                             CardView(
                                 icon: Image(systemName: "cloud.fill"),
                                 title: String(format: "%d%%", weather.clouds.all),
-                                subtitle: "Cloudiness"
+                                subtitle: "cloudiness".localized
                             )
                         }
                         
