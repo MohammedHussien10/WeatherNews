@@ -1,10 +1,4 @@
-/* 
-  Localizable.strings
-  WeatherNews
 
-  Created by Macos on 11/01/2026.
-  
-*/
 "home" = "الصفحة الرئيسية";
 "settings_title" = "الإعدادات";
 "dark_mode" = "الوضع الليلي";
@@ -57,3 +51,9 @@
 "wind_unit_mps_short" = "م/ث";
 "wind_unit_mph_short" = "ميل/س";
 "temperature_value" = "%@ %@";
+"weather_alert" = "تنبيه الطقس";
+"weather_alert_for" = "تنبيه الطقس لمدينة %@";
+"location_permission_title" = "السماح بالموقع مطلوب";
+"location_permission_message" = "من فضلك فعّل الوصول للموقع من الإعدادات لاستخدام GPS.";
+"open_settings" = "فتح الإعدادات";
+

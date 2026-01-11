@@ -1,9 +1,4 @@
-//
-//  WeatherService.swift
-//  WeatherNews
-//
-//  Created by Macos on 01/11/2025.
-//
+
 
 import Foundation
 import KeychainSwift

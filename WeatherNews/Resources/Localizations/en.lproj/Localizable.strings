@@ -1,10 +1,4 @@
-/* 
-  Localizable.strings
-  WeatherNews
 
-  Created by Macos on 11/01/2026.
-  
-*/
 "home" = "Home";
 "settings_title" = "Settings";
 "dark_mode" = "Dark Mode";
@@ -57,3 +51,8 @@
 "wind_unit_mps_short" = "m/s";
 "wind_unit_mph_short" = "mph";
 "temperature_value" = "%@ %@";
+"weather_alert" = "Weather Alert";
+"weather_alert_for" = "Weather alert for %@";
+"location_permission_title" = "Location Permission Needed";
+"location_permission_message" = "Please enable location access from Settings to use GPS.";
+"open_settings" = "Open Settings";

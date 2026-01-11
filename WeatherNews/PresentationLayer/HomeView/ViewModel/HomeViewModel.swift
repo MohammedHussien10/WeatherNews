@@ -1,9 +1,4 @@
-//
-//  HomeViewModel.swift
-//  WeatherNews
-//
-//  Created by Macos on 31/10/2025.
-//
+
 
 import Foundation
 import SwiftUI
@@ -18,7 +13,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     @Published var fallbackCityName: String?
     @Published var fallbackCountryName: String?
     @Published var locationSource: LocationSource = .gps
-
+    @Published var showLocationPermissionAlert = false
     @AppStorage("savedLat") var savedLat: Double = 30.0444
     @AppStorage("savedLon") var savedLon: Double = 31.2357
     var lat: Double?
@@ -187,10 +182,16 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             long = coordinate.longitude
        await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
             
+        }catch LocationError.permissionDenied {
+            showLocationPermissionAlert = true
         }catch{
             print("GPS error:", error.localizedDescription)
         }
     }
+    
+    
+    
+    
     
     @MainActor
     func fetchWeatherFromMap(lat: Double, lon: Double) async {

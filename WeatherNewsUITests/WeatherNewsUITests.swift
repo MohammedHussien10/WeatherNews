@@ -1,9 +1,3 @@
-//
-//  WeatherNewsUITests.swift
-//  WeatherNewsUITests
-//
-//  Created by Macos on 21/10/2025.
-//
 
 import XCTest
 

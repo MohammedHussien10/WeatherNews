@@ -1,9 +1,3 @@
-//
-//  MapView.swift
-//  WeatherNews
-//
-//  Created by Macos on 05/11/2025.
-//
 
 import SwiftUI
 import MapKit

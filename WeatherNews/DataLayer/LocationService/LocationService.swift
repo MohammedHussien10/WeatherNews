@@ -1,10 +1,3 @@
-//
-//  LocationService.swift
-//  WeatherNews
-//
-//  Created by Macos on 22/12/2025.
-//
-
 import Foundation
 import CoreLocation
 

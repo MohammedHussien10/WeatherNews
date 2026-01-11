@@ -1,9 +1,4 @@
-//
-//  AlertManager.swift
-//  WeatherNews
-//
-//  Created by Macos on 16/12/2025.
-//
+
 
 import Foundation
 import UserNotifications
@@ -20,8 +15,12 @@ final class AlertManager {
     func scheduleAlert(alert: WeatherAlert) {
         
         let content = UNMutableNotificationContent()
-        content.title = "Weather Alert"
-        content.body = "Weather alert for \(alert.city)"
+        content.title = "weather_alert".localized
+        content.body = String(
+            format: "weather_alert_for".localized,
+            alert.city
+        )
+
         content.categoryIdentifier = "WEATHER_ALERT_CATEGORY"
 
  
@@ -111,7 +110,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         UNUserNotificationCenter.current().delegate = notificationDelegate
 
         Task {
-            await AlertManager.shared.requestPermission()
             AlertManager.shared.setupNotificationCategories()
         }
 

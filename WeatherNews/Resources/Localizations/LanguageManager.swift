@@ -1,9 +1,4 @@
-//
-//  LanguageManager.swift
-//  WeatherNews
-//
-//  Created by Macos on 11/01/2026.
-//
+
 
 import Foundation
 import SwiftUI
@@ -38,7 +33,6 @@ private var bundleKey: UInt8 = 0
 
 extension Bundle {
     static func setLanguage(_ language: String) {
-        // Override main bundle class
         object_setClass(Bundle.main, PrivateBundle.self)
         objc_setAssociatedObject(Bundle.main, &bundleKey, language, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }

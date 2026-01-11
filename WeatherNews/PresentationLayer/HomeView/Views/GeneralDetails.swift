@@ -1,9 +1,4 @@
-//
-//  GeneralDetails.swift
-//  WeatherNews
-//
-//  Created by Macos on 17/11/2025.
-//
+
 
 import SwiftUI
 import Kingfisher
@@ -65,8 +60,6 @@ struct GeneralDetails: View {
             
             HStack{
                 if let weather = currentWeather{
-                    //Text(weather.weather.first?.description ?? "")
-                    //weatherIcon(weather.weather.first?.icon.weatherIconURL)
                     VStack{
                         HStack{
                             Text("today".localized).font(.headline)

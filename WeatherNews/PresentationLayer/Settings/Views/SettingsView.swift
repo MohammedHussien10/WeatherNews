@@ -1,9 +1,4 @@
-//
-//  Settings.swift
-//  WeatherNews
-//
-//  Created by Macos on 21/10/2025.
-//
+
 
 import SwiftUI
 // MARK: - Views
@@ -73,7 +68,23 @@ struct SettingsView: View {
                         set: { isOn in
                                    locationRawValue = isOn ? LocationMode.gps.rawValue : LocationMode.none.rawValue
                                }
-                    ))
+                    )).alert("location_permission_title".localized,
+                             isPresented: $homeViewModel.showLocationPermissionAlert) {
+
+                          Button("open_settings".localized) {
+                              if let url = URL(string: UIApplication.openSettingsURLString) {
+                                  UIApplication.shared.open(url)
+                              }
+                          }
+
+                        Button("cancel".localized, role: .cancel) {
+                            locationRawValue = LocationMode.none.rawValue
+                        }
+
+                      } message: {
+                          Text("location_permission_message".localized)
+                      }
+
                     
                     Toggle("use_map".localized, isOn: Binding(
                         get: { locationRawValue == LocationMode.map.rawValue },

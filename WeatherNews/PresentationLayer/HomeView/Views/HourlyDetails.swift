@@ -1,9 +1,4 @@
-//
-//  Hourly Details.swift
-//  WeatherNews
-//
-//  Created by Macos on 20/11/2025.
-//
+
 
 import SwiftUI
 import Kingfisher

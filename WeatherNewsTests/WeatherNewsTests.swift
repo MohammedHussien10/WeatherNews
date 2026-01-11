@@ -1,9 +1,4 @@
-//
-//  WeatherNewsTests.swift
-//  WeatherNewsTests
-//
-//  Created by Macos on 21/10/2025.
-//
+
 
 import XCTest
 @testable import WeatherNews
