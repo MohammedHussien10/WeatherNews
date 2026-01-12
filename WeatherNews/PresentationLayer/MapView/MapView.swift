@@ -31,7 +31,7 @@ struct MapView: View {
                         .font(.headline)
                         .foregroundColor(.black)
                     
-                    Button("Select Location") {
+                    Button("select_location".localized) {
                         Task {
                             await getLocation()
                         }
@@ -67,23 +67,23 @@ struct MapView: View {
         case .settings:
             
             guard let weather = homeviewModel.currentWeather else {
-                return "Select a location"
+                return "select_location_hint".localized
             }
             
-            let country = weather.sys.country?.fullCountryName ?? homeviewModel.fallbackCountryName ?? "Unknown Country"
+            let country = weather.sys.country?.fullCountryName ?? homeviewModel.fallbackCountryName ?? "unknown_country".localized
                 let city: String
             if let name = weather.name, !name.isEmpty {
                     city = name
                 } else {
-                    city = homeviewModel.fallbackCityName ?? "Unknown City"
+                    city = homeviewModel.fallbackCityName ?? "unknown_city".localized
                 }
 
                 return "\(country), \(city)"
         case .favorites:
-            return "Select a location To Favorites"
+            return "select_location_favorites".localized
             
         case .alerts:
-                return "Select a location To Alerts"
+            return "select_location_alerts".localized
             }
   
   

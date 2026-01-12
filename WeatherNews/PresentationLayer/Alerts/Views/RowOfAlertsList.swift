@@ -5,7 +5,6 @@ struct RowOfAlertsList: View {
     @EnvironmentObject var viewModel:AlertsViewModel
     @State private var showDeleteAlert = false
     @State private var alertToDelete: WeatherAlert?
-
     var body: some View {
         Group{
             
@@ -28,14 +27,12 @@ struct RowOfAlertsList: View {
                            HStack {
                                VStack(alignment: .leading) {
                                    Text(alert.city)
-                                   Text(alert.type.rawValue.capitalized).foregroundColor(.blue)
-                                  
-                                   Text(alert.date.formatted(
-                                       date: .abbreviated,
-                                       time: .shortened
-                                   ))
-                                   .font(.subheadline)
-                                   .foregroundColor(.gray)
+                                   Text(alert.type.rawValue.localized).foregroundColor(.blue)
+                       
+                                   Text(viewModel.localizedDate(alert.date, language: viewModel.language))
+                                       .font(.subheadline)
+                                       .foregroundColor(.gray)
+
                                }
                            }
                        } .onDelete { indexSet in

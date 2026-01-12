@@ -51,7 +51,7 @@ struct Alerts: View {
 
                 Picker("alert_type".localized, selection: $type) {
                     ForEach(AlertType.allCases, id: \.self) {
-                        Text($0.rawValue.capitalized)
+                        Text($0.rawValue.localized)
                     }
                 }
 

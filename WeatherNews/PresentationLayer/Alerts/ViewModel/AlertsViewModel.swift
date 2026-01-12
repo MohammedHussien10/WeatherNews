@@ -1,5 +1,6 @@
 
 import Foundation
+import SwiftUI
 import MapKit
 final class AlertsViewModel:ObservableObject{
     
@@ -10,6 +11,10 @@ final class AlertsViewModel:ObservableObject{
     @Published var isCreatingFromHome = false
     @Published var showToast = false
     @Published var toastMessage = ""
+    @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
+    var language: AppLanguage {
+        AppLanguage(rawValue: languageRawValue) ?? .english
+    }
     private let storage: AlertsStorage
     var sortedAlerts: [WeatherAlert] {
         alerts.sorted {
@@ -127,7 +132,14 @@ final class AlertsViewModel:ObservableObject{
         await deleteAlert(id: alert.id)
     }
 
-    
+    func localizedDate(_ date: Date, language: AppLanguage) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: language.apiParameter)
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
+    }
+
 }
 
 protocol AlertsStorage {

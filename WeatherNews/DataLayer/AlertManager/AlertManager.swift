@@ -128,7 +128,17 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 enum AlertType: String, Codable, CaseIterable {
     case notification
     case alarm
+    var displayName: String {
+        switch self {
+        case .notification:
+            return "alarm".localized
+        case .alarm:
+            return "notification".localized
+        }
+        
+    }
 }
+
 
 struct WeatherAlert: Identifiable, Codable {
     let id: UUID

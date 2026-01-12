@@ -80,7 +80,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "14"
             endingLineNumber = "14"
-            landmarkName = "getFavouritesDataWeather()"
+            landmarkName = "addDataWeatherToFavs(dataWeather:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -173,9 +173,9 @@
             filePath = "WeatherNews/PresentationLayer/HomeView/ViewModel/HomeViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "261"
-            endingLineNumber = "261"
-            landmarkName = "formattedTime(from:timezone:language:)"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
+            landmarkName = "formattedDate(from:timezone:)"
             landmarkType = "7">
             <Locations>
                <Location

@@ -56,3 +56,11 @@
 "location_permission_title" = "Location Permission Needed";
 "location_permission_message" = "Please enable location access from Settings to use GPS.";
 "open_settings" = "Open Settings";
+"select_location" = "Select Location";
+"select_location_hint" = "Select a location";
+"unknown_country" = "Unknown Country";
+"unknown_city" = "Unknown City";
+"select_location_favorites" = "Select a location To Favorites";
+"select_location_alerts" = "Select a location To Alerts";
+"notification" = "Notification";
+"alarm" = "Alarm";

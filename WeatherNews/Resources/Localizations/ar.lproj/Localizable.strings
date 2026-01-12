@@ -56,4 +56,11 @@
 "location_permission_title" = "السماح بالموقع مطلوب";
 "location_permission_message" = "من فضلك فعّل الوصول للموقع من الإعدادات لاستخدام GPS.";
 "open_settings" = "فتح الإعدادات";
-
+"select_location" = "اختيار الموقع";
+"select_location_hint" = "يرجى اختيار موقع";
+"unknown_country" = "دولة غير معروفة";
+"unknown_city" = "مدينة غير معروفة";
+"select_location_favorites" = "اختر موقعًا لإضافته إلى المفضلة";
+"select_location_alerts" = "اختر موقعًا لإنشاء تنبيه";
+"notification" = "إشعار";
+"alarm" = "تنبيه";

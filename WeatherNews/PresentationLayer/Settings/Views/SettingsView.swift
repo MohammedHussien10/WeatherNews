@@ -187,17 +187,6 @@ struct SettingsView: View {
     }
     
     
-    
-    //#Preview {
-    //    let homeVM = HomeViewModel(getWeatherUseCase: UseCaseWeatherImpl(repo: RepositoryImpl(remoteDataSource: RemoteDataSourceImpl())))
-    //    let settingsVM = SettingsViewModel(homeViewModel: homeVM)
-    //    SettingsView(settingsViewModel: settingsVM)
-    //}
-    
-    
-    
-    
-    
 
 
 extension View {
@@ -209,5 +198,3 @@ extension View {
             .shadow(radius: 1)
     }
 }
-
-// orginal
