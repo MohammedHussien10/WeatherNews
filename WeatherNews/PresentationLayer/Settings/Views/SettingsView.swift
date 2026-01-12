@@ -117,7 +117,7 @@ struct SettingsView: View {
                     
                     
                     
-                    InfoCard(title: "about_app".localized, subtitle: "Weather News v 1.0\nMade by Eng.Mohammed Hussien\nContact Me at:\nEmail: mohammedhussien10101010@gmail.com")
+                    InfoCard(title: "about_app".localized, subtitle: "Weather News v 1.0\nMade by Mohammed Hussien\nContact Me at:\nEmail: mohammedhussien10101010@gmail.com")
                     
                     
                     
