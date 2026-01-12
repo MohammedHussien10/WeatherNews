@@ -36,7 +36,7 @@
 " to_add_alert" = " لإضافة تنبيه طقس ";
 "delete_alert_title" = "حذف التنبيه";
 "delete_alert_message" = "حذف التنبيه لموقع %@؟";
-"toast_future_time" = "⏰ من فضلك اختر وقتًا في المستقبل";
+"toast_future_time" = "من فضلك اختر وقتًا في المستقبل";
 "toast_already_favorite" = "الموقع موجود بالفعل في المفضلة";
 "unknown" = "غير معروف";
 "about_app" = "عن التطبيق";

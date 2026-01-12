@@ -36,7 +36,7 @@
 " to_add_alert" = " to add a weather alert";
 "delete_alert_title" = "Delete Alert";
 "delete_alert_message" = "Delete alert for %@?";
-"toast_future_time" = "⏰ Please select a future time";
+"toast_future_time" = "Please select a future time";
 "toast_already_favorite" = "Location already in Favorites";
 "unknown" = "Unknown";
 "about_app" = "About App";
