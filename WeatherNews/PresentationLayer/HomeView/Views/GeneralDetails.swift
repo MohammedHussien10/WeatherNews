@@ -13,13 +13,13 @@ struct GeneralDetails: View {
     private let helper: HelperWeatherDetails = HelperWeatherDetails()
 
     private var windText: String {
-        String(
-            format: "%.1f %@",
+        helper.localizedNumber(
             windSpeedConverter ?? 0.0,
-            windSpeedUnit.shortName
-        )
+            language: helper.language,
+            fractionDigits: 1
+        ) + " " + windSpeedUnit.shortName
     }
-    
+
 
     var body: some View {
         VStack(alignment:.center){
@@ -74,14 +74,20 @@ struct GeneralDetails: View {
                             )
                             CardView(
                                 icon:Image(systemName: "drop.fill"),
-                                title: String(format: "%d%%", weather.main.humidity),
-                                subtitle: "humidity".localized
-                                
+                                title:   helper.localizedInt(
+                                    weather.main.humidity,
+                                    language:  helper.language
+                                ) + "%", subtitle: "humidity".localized
                             )
+                            
                             
                             CardView(
                                 icon: Image(systemName: "gauge"),
-                                title: "\(weather.main.pressure) hPa",
+                                title:helper.localizedInt(
+                                    weather.main.pressure,
+                                    language: helper.language
+                                ) + "pressure_unit_hpa".localized
+,
                                 subtitle: "pressure".localized
                             )
                             
@@ -91,20 +97,30 @@ struct GeneralDetails: View {
                             if let population = forecast?.city.population {
                                 CardView(
                                     icon: Image(systemName: "person.2.fill"),
-                                    title: "\(population)",
+                                    title: helper.localizedInt(
+                                        population,
+                                        language: helper.language),
                                     subtitle: "population".localized
                                 )
                             }
 
                             CardView(
                                 icon:Image(systemName: "thermometer"),
-                                title: String(format: "%.0f %@", weather.main.feels_like,temperatureUnit.displayShort),
+                                title: helper.localizedNumber(
+                                    weather.main.feels_like,
+                                    language: helper.language
+                                ) + " " + temperatureUnit.displayShort
+,
                                 subtitle: "feels_like".localized
                             )
                             
                             CardView(
                                 icon: Image(systemName: "cloud.fill"),
-                                title: String(format: "%d%%", weather.clouds.all),
+                                title: helper.localizedInt(
+                                    weather.clouds.all,
+                                    language: helper.language
+                                ) + "%"
+,
                                 subtitle: "cloudiness".localized
                             )
                         }

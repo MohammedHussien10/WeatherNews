@@ -173,8 +173,8 @@
             filePath = "WeatherNews/PresentationLayer/HomeView/ViewModel/HomeViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "260"
-            endingLineNumber = "260"
+            startingLineNumber = "261"
+            endingLineNumber = "261"
             landmarkName = "formattedDate(from:timezone:)"
             landmarkType = "7">
             <Locations>

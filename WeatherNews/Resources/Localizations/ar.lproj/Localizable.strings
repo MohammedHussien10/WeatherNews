@@ -43,13 +43,13 @@
 "temp_kelvin" = "كلفن (°ك)";
 "temp_celsius" = "مئوية (°م)";
 "temp_fahrenheit" = "فهرنهايت (°ف)";
-"temp_celsius_short" = "°م";
-"temp_fahrenheit_short" = "°ف";
-"temp_kelvin_short" = "°ك";
-"wind_meter_sec" = "متر / ثانية";
-"wind_miles_hour" = "ميل / ساعة";
-"wind_unit_mps_short" = "م/ث";
-"wind_unit_mph_short" = "ميل/س";
+"temp_celsius_short" = "(°م)";
+"temp_fahrenheit_short" = "(°ف)";
+"temp_kelvin_short" = "(°ك)";
+"wind_meter_sec" = "(متر / ثانية)";
+"wind_miles_hour" = "(ميل / ساعة)";
+"wind_unit_mps_short" = "(م/ث)";
+"wind_unit_mph_short" = "(ميل/س)";
 "temperature_value" = "%@ %@";
 "weather_alert" = "تنبيه الطقس";
 "weather_alert_for" = "تنبيه الطقس لمدينة %@";
@@ -64,3 +64,4 @@
 "select_location_alerts" = "اختر موقعًا لإنشاء تنبيه";
 "notification" = "إشعار";
 "alarm" = "تنبيه";
+"pressure_unit_hpa" = "(هـ.ب)";

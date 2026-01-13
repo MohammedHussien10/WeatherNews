@@ -4,7 +4,7 @@ import Foundation
 import SwiftUI
 import MapKit
 final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
-  
+    
     @Published var currentWeather : WeatherResponse?
     @Published var forecast : ForecastResponse?
     @Published var windSpeedConverter : Double?
@@ -25,8 +25,8 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     var temperatureUnit: TemperatureUnit {
         TemperatureUnit(rawValue: temperatureUnitRawValue) ?? .celsius
     }
-
-
+    
+    
     var windSpeedUnit: WindSpeedUnit {
         get { WindSpeedUnit(rawValue: windSpeedUnitRawValue) ?? .meterPerSecond }
         set {
@@ -34,8 +34,8 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             refetchWindSpeed()
         }
     }
-
-
+    
+    
     var language: AppLanguage {
         AppLanguage(rawValue: languageRawValue) ?? .english
     }
@@ -64,7 +64,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             async let currentWeatherData = try getWeatherUseCase.getCurrentWeather(category: .latandLong(latitude, longitude),unit:unitTemp,language:appLanguage)
             async let forecastData = try getWeatherUseCase.getForecast(category: .latandLong(latitude, longitude),unit:unitTemp,language:appLanguage)
             
-        let (weatherResponse,forecastResponse) = try await (currentWeatherData,forecastData)
+            let (weatherResponse,forecastResponse) = try await (currentWeatherData,forecastData)
             if Task.isCancelled { return }
             self.currentWeather = weatherResponse
             self.forecast = forecastResponse
@@ -72,65 +72,65 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             await resolveFallbackCityAndCountryIfNeeded(latitude: latitude,longitude: longitude)
             // save Cache
             WeatherCacheManager.shared.save(weather: weatherResponse, forecast: forecastResponse)
-
+            
         }catch{
             self.errorMessage = error.localizedDescription
             if let (w,f,_) = WeatherCacheManager.shared.load() {
-                         self.currentWeather = w
-                         self.forecast = f
+                self.currentWeather = w
+                self.forecast = f
             }
         }
         isLoading = false
         windSpeedConverter = helper.convertWindSpeed(currentWeather?.wind.speed ?? 0.0, from: temperatureUnit, to: windSpeedUnit)
     }
- 
+    
     @MainActor
     func loadCachedOrFetch(latitude: Double?, longitude: Double?) async {
         fetchTask?.cancel()
         let lat: Double
-         let lon: Double
-
-         if let latitude, let longitude {
-             lat = latitude
-             lon = longitude
-         } else {
-             switch locationSource {
-             case .gps:
-                 lat = savedLat
-                 lon = savedLon
-             case .map:
-                 guard let mapLat = self.lat,
-                       let mapLon = self.long else { return }
-                 lat = mapLat
-                 lon = mapLon
-             }
-         }
-
-         self.lat = lat
-         self.long = lon
+        let lon: Double
+        
+        if let latitude, let longitude {
+            lat = latitude
+            lon = longitude
+        } else {
+            switch locationSource {
+            case .gps:
+                lat = savedLat
+                lon = savedLon
+            case .map:
+                guard let mapLat = self.lat,
+                      let mapLon = self.long else { return }
+                lat = mapLat
+                lon = mapLon
+            }
+        }
+        
+        self.lat = lat
+        self.long = lon
         
         if WeatherCacheManager.shared.isCacheValid(),let (w,f) = WeatherCacheManager.shared.getCachedWeather(){
             self.currentWeather = w
             self.forecast = f
         }
         fetchTask = Task { [weak self] in
-                     guard let self = self else { return }
-                     await self.fetchWeather(latitude: lat, longitude: lon)
-                     self.fetchTask = nil
-          }
+            guard let self = self else { return }
+            await self.fetchWeather(latitude: lat, longitude: lon)
+            self.fetchTask = nil
+        }
         
     }
     
     @MainActor
     func refresh(latitude: Double?, longitude: Double?) async {
         fetchTask?.cancel()
-            let lat = latitude ?? self.lat ?? savedLat
-            let lon = longitude ?? self.long ?? savedLon
-            fetchTask = Task { [weak self] in
-                guard let self = self else { return }
-                await self.fetchWeather(latitude: lat, longitude: lon)
-                self.fetchTask = nil
-            }
+        let lat = latitude ?? self.lat ?? savedLat
+        let lon = longitude ?? self.long ?? savedLon
+        fetchTask = Task { [weak self] in
+            guard let self = self else { return }
+            await self.fetchWeather(latitude: lat, longitude: lon)
+            self.fetchTask = nil
+        }
     }
     
     func refetchWindSpeed() {
@@ -138,18 +138,18 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
         windSpeedConverter = helper.convertWindSpeed(speed, from: temperatureUnit, to: windSpeedUnit)
     }
     
-
+    
     func formattedTime(from timestamp: Int, timezone: Int ,language: AppLanguage) -> String {
         helper.formattedTime(from: timestamp, timezone: timezone, language: language)
     }
-
-        func formattedDate(from timestamp: Int, timezone: Int) -> String {
-            helper.formattedDate(from: timestamp, timezone: timezone)
-        }
-
-        func getNextFiveDays(list: [ForecastItem]) -> [ForecastItem] {
-            helper.getNextFiveDays(list: list)
-        }
+    
+    func formattedDate(from timestamp: Int, timezone: Int) -> String {
+        helper.formattedDate(from: timestamp, timezone: timezone)
+    }
+    
+    func getNextFiveDays(list: [ForecastItem]) -> [ForecastItem] {
+        helper.getNextFiveDays(list: list)
+    }
     
     @MainActor
     func resolveFallbackCityAndCountryIfNeeded(latitude: Double, longitude: Double) async {
@@ -158,7 +158,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
         
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let geocoder = CLGeocoder()
-
+        
         do {
             let placemarks = try await geocoder.reverseGeocodeLocation(location)
             if let placemark = placemarks.first {
@@ -171,7 +171,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     }
     @MainActor
     func fetchWeatherUsingGPS() async {
-      fetchTask?.cancel()
+        fetchTask?.cancel()
         do{
             let coordinate = try await locationService.requestCurrentLocation()
             
@@ -179,7 +179,7 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
             savedLon = coordinate.longitude
             lat = coordinate.latitude
             long = coordinate.longitude
-       await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            await fetchWeather(latitude: coordinate.latitude, longitude: coordinate.longitude)
             
         }catch LocationError.permissionDenied {
             showLocationPermissionAlert = true
@@ -196,13 +196,14 @@ final class HomeViewModel:ObservableObject,WeatherDetailsVMProtocol {
     func fetchWeatherFromMap(lat: Double, lon: Double) async {
         fetchTask?.cancel()
         locationSource = .map
-
+        
         self.lat = lat
         self.long = lon
-
+        
         await fetchWeather(latitude: lat, longitude: lon)
     }
-
+    
+    
     
 }
 
@@ -225,7 +226,7 @@ struct HelperWeatherDetails {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
             let dayString = formatter.string(from: date)
-    
+            
             if Calendar.current.isDate(date, inSameDayAs: Date() ){
                 continue
             }
@@ -240,7 +241,7 @@ struct HelperWeatherDetails {
         return result
         
     }
-
+    
     
     //Convert dt to Real Time Date
     
@@ -254,24 +255,24 @@ struct HelperWeatherDetails {
         
         
     }
-
+    
     //Convert dt to Real Time Time
     
     func formattedDate(from timestamp: Int, timezone: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
-          let formatter = DateFormatter()
-          
-          formatter.dateFormat = "E, d MMM"
-          formatter.timeZone = TimeZone(secondsFromGMT: timezone)
-          formatter.locale = Locale(identifier: language.apiParameter)
-          
-          return formatter.string(from: date)
+        let formatter = DateFormatter()
+        
+        formatter.dateFormat = "E, d MMM"
+        formatter.timeZone = TimeZone(secondsFromGMT: timezone)
+        formatter.locale = Locale(identifier: language.apiParameter)
+        
+        return formatter.string(from: date)
     }
     //Convert convert WindSpeed
     
     func convertWindSpeed(_ speed: Double, from apiUnits: TemperatureUnit, to windUnit: WindSpeedUnit) -> Double {
         
-     
+        
         if apiUnits == .celsius || apiUnits == .kelvin {
             switch windUnit {
             case .meterPerSecond:
@@ -293,19 +294,19 @@ struct HelperWeatherDetails {
         
         return speed
     }
-
+    
     
     func localizedTemperature(
         _ value: Double,
         unit: TemperatureUnit,
         language: AppLanguage
     ) -> String {
-
+        
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 0
         formatter.locale = Locale(identifier: language.apiParameter)
-
+        
         let number = formatter.string(from: NSNumber(value: value)) ?? "\(Int(value))"
         return String(
             format: "temperature_value".localized,
@@ -313,6 +314,35 @@ struct HelperWeatherDetails {
             unit.displayShort
         )
     }
+    
+    func localizedNumber(
+        _ value: Double,
+        language: AppLanguage,
+        fractionDigits: Int = 0
+    ) -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: language.apiParameter)
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = fractionDigits
+        
+        return formatter.string(from: NSNumber(value: value))
+        ?? "\(Int(value))"
+    }
+    
+     func localizedInt(
+        _ value: Int,
+        language: AppLanguage
+    ) -> String {
+        
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: language.apiParameter)
+        formatter.numberStyle = .decimal
+        
+        return formatter.string(from: NSNumber(value: value))
+        ?? "\(value)"
+    }
+    
     
     
 }
@@ -324,36 +354,36 @@ enum TemperatureUnit: String, SettingOption {
     
     var id: String { rawValue }
     var displayName: String {
-         switch self {
-         case .kelvin:
-             return "temp_kelvin".localized
-         case .celsius:
-             return "temp_celsius".localized
-         case .fahrenheit:
-             return "temp_fahrenheit".localized
-         }
-     }
-
+        switch self {
+        case .kelvin:
+            return "temp_kelvin".localized
+        case .celsius:
+            return "temp_celsius".localized
+        case .fahrenheit:
+            return "temp_fahrenheit".localized
+        }
+    }
+    
     
     var apiParameter: String {
-           switch self {
-           case .kelvin: return "standard"
-           case .celsius: return "metric"
-           case .fahrenheit: return "imperial"
-           }
-       }
+        switch self {
+        case .kelvin: return "standard"
+        case .celsius: return "metric"
+        case .fahrenheit: return "imperial"
+        }
+    }
     
     var displayShort: String {
-          switch self {
-          case .celsius:
-              return "temp_celsius_short".localized
-          case .fahrenheit:
-              return "temp_fahrenheit_short".localized
-          case .kelvin:
-              return "temp_kelvin_short".localized
-          }
-      }
-
+        switch self {
+        case .celsius:
+            return "temp_celsius_short".localized
+        case .fahrenheit:
+            return "temp_fahrenheit_short".localized
+        case .kelvin:
+            return "temp_kelvin_short".localized
+        }
+    }
+    
 }
 
 enum WindSpeedUnit: String, SettingOption {
@@ -371,11 +401,11 @@ enum WindSpeedUnit: String, SettingOption {
     }
     
     var shortName: String {
-            switch self {
-            case .meterPerSecond: return "wind_unit_mps_short".localized
-            case .milesPerHour: return "wind_unit_mph_short".localized
-            }
+        switch self {
+        case .meterPerSecond: return "wind_unit_mps_short".localized
+        case .milesPerHour: return "wind_unit_mph_short".localized
         }
+    }
     
 }
 
@@ -393,11 +423,11 @@ enum AppLanguage: String, SettingOption,CaseIterable {
     }
     
     var apiParameter: String {
-            switch self {
-            case .english: return "en"
-            case .arabic: return "ar"
-            }
+        switch self {
+        case .english: return "en"
+        case .arabic: return "ar"
         }
+    }
 }
 
 enum LocationMode: String, SettingOption {

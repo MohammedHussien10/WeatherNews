@@ -64,3 +64,4 @@
 "select_location_alerts" = "Select a location To Alerts";
 "notification" = "Notification";
 "alarm" = "Alarm";
+"pressure_unit_hpa" = " hPa";
