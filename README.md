@@ -109,6 +109,13 @@ Presentation (SwiftUI Views)
 
 ---
 
+## Performance & Caching
+
+* Custom cache manager using FileManager & Codable
+* In-memory + disk cache fallback strategy
+  
+---
+
 ## APIs
 
 * Weather data provided by a public Weather API
