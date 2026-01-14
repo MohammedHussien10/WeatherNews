@@ -105,6 +105,7 @@ Presentation (SwiftUI Views)
 * Dynamic background that adapts to current weather conditions
 * Clean, modern SwiftUI design
 * Smooth animations and transitions
+* Custom app icon & launch screen
 
 ---
 
