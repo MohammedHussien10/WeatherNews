@@ -1,18 +1,25 @@
-//
-//  SplashView.swift
-//  WeatherNews
-//
-//  Created by Macos on 15/01/2026.
-//
 
 import SwiftUI
-
+import Lottie
+import Combine
 struct SplashView: View {
+    @State private var isActive = false
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        if isActive {
+            WeatherContainer()
+        } else {
+            ZStack {
+                LottieView(animationName: "Weather_News")
+                    .frame(width: 200, height: 200)
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    withAnimation {
+                        isActive = true
+                    }
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    SplashView()
 }

@@ -109,8 +109,7 @@ struct GeneralDetails: View {
                                 title: helper.localizedNumber(
                                     weather.main.feels_like,
                                     language: helper.language
-                                ) + " " + temperatureUnit.displayShort
-,
+                                ) + " " + temperatureUnit.displayShort,
                                 subtitle: "feels_like".localized
                             )
                             
@@ -119,8 +118,7 @@ struct GeneralDetails: View {
                                 title: helper.localizedInt(
                                     weather.clouds.all,
                                     language: helper.language
-                                ) + "%"
-,
+                                ) + "%",
                                 subtitle: "cloudiness".localized
                             )
                         }

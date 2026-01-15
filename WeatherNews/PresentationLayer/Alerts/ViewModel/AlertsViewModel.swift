@@ -11,6 +11,7 @@ final class AlertsViewModel:ObservableObject{
     @Published var isCreatingFromHome = false
     @Published var showToast = false
     @Published var toastMessage = ""
+    @Published var showNotificationPermissionAlert = false
     @AppStorage("appLanguage") private var languageRawValue: String = AppLanguage.english.rawValue
     var language: AppLanguage {
         AppLanguage(rawValue: languageRawValue) ?? .english
@@ -39,7 +40,16 @@ final class AlertsViewModel:ObservableObject{
         dateOfAlert: Date,
         type: AlertType
     )->Bool {
-        
+        Task {
+               let allowed = await AlertManager.shared.requestPermissionIfNeeded()
+               if !allowed {
+                   showNotificationPermissionAlert = true
+               }
+           }
+
+           guard showNotificationPermissionAlert == false else {
+               return false
+           }
         guard dateOfAlert > Date() else {
             toastMessage = "toast_future_time".localized
             showToast = true

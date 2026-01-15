@@ -27,11 +27,11 @@ struct WeatherNewsApp: App {
     }
     var body: some Scene {
         WindowGroup {
-            WeatherContainer().preferredColorScheme(isDarkMode ? .dark : .light).environmentObject(homeVM) .environmentObject(favoritesVM).task {
+            SplashView().preferredColorScheme(isDarkMode ? .dark : .light).environmentObject(homeVM) .environmentObject(favoritesVM).task {
                 await favoritesVM.loadFavorites()
             }.environmentObject(alertsVM).environmentObject(languageManager)
         }
     }
     
-    
+
 }

@@ -70,7 +70,40 @@ final class AlertManager {
         UNUserNotificationCenter.current().setNotificationCategories([category])
     }
 
-    
+    @MainActor
+    func requestPermissionIfNeeded() async -> Bool {
+        let status = await getPermissionStatus()
+
+        switch status {
+        case .notDetermined:
+            let granted = try? await UNUserNotificationCenter.current()
+                .requestAuthorization(options: [.alert, .sound])
+            return granted ?? false
+
+        case .authorized:
+            return true
+
+        case .denied:
+            return false
+        }
+    }
+    @MainActor
+    func getPermissionStatus() async -> NotificationPermissionStatus {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+
+        switch settings.authorizationStatus {
+        case .notDetermined:
+            return .notDetermined
+        case .authorized, .provisional:
+            return .authorized
+        case .denied:
+            return .denied
+        @unknown default:
+            return .denied
+        }
+    }
+
+
 }
 
 
@@ -121,6 +154,11 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
 
 
 
+enum NotificationPermissionStatus {
+    case notDetermined
+    case authorized
+    case denied
+}
 
 
 

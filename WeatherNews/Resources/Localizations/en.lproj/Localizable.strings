@@ -65,3 +65,5 @@
 "notification" = "Notification";
 "alarm" = "Alarm";
 "pressure_unit_hpa" = " hPa";
+"notification_permission_title" = "Notifications Disabled";
+"notification_permission_message" = "Please enable notifications from Settings to receive weather alerts.";

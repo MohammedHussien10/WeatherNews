@@ -16,9 +16,6 @@ struct Alerts: View {
             AddAlertView{
                 showMap = true
             }
-        }.task {
-            await AlertManager.shared.requestPermission()
-           
         }
         .navigationTitle("weather_alerts".localized)
 .task {
@@ -29,7 +26,7 @@ struct Alerts: View {
     }
 }
 .navigationDestination(isPresented: $showMap) {
-            MapView(mode: .alerts) { _ in 
+            MapView(mode: .alerts) { _ in
                 showDatePicker = true
                 
             }
@@ -95,7 +92,21 @@ struct Alerts: View {
                     }
                 }
             }
+        }.alert(
+            "notification_permission_title".localized,
+            isPresented: $viewModel.showNotificationPermissionAlert
+        ) {
+            Button("open_settings".localized) {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+
+            Button("cancel".localized, role: .cancel) {}
+        } message: {
+            Text("notification_permission_message".localized)
         }
+
 
 
 

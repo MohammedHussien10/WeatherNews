@@ -65,3 +65,5 @@
 "notification" = "إشعار";
 "alarm" = "تنبيه";
 "pressure_unit_hpa" = "(هـ.ب)";
+"notification_permission_title" = "الإشعارات غير مفعّلة";
+"notification_permission_message" = "من فضلك فعّل الإشعارات من الإعدادات لتلقي تنبيهات الطقس.";
