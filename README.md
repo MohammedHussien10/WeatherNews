@@ -1,6 +1,6 @@
-# WeatherNews iOS App
+# Weather News iOS App
 
-WeatherNews is a **native iOS weather application** built with **Swift & SwiftUI**, designed with clean architecture principles and a strong focus on **localization, scalability, and real-world production practices**.
+Weather News is a **native iOS weather application** built with **Swift & SwiftUI**, designed with clean architecture principles and a strong focus on **localization, scalability, and real-world production practices**.
 
 The app provides real-time weather data, forecasts, favorites, alerts, and full Arabic/English localization — all wrapped in a clean, modern UI.
 
