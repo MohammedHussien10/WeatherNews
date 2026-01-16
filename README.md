@@ -125,7 +125,7 @@ Presentation (SwiftUI Views)
 
 ## Demo
 
-**Demo Video:** *(Add link here)*
+**Demo Video:** *()*
 
 ---
 
