@@ -124,7 +124,7 @@ Presentation (SwiftUI Views)
 
 ## Demo
 
-**Demo Video:** *()*
+**Demo Video:** *(https://www.linkedin.com/posts/mohammed-hussein-14123b2a0_ios-swiftui-mobiledevelopment-activity-7417898956220792832-vl-6)*
 
 ---
 
