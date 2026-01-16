@@ -55,17 +55,18 @@ struct Alerts: View {
                 Button("confirm".localized) {
                     if let lat = viewModel.pendingLat,
                        let long = viewModel.pendingLong {
-
-                        let success = viewModel.addAlert(
-                            city: viewModel.cityOfAlert,
-                            lat: lat,
-                            long: long,
-                            dateOfAlert: alertDate,
-                            type: type
-                        )
-
-                        if success {
-                            showDatePicker = false
+                        Task{
+                            let success = await viewModel.addAlert(
+                                city: viewModel.cityOfAlert,
+                                lat: lat,
+                                long: long,
+                                dateOfAlert: alertDate,
+                                type: type
+                            )
+                            
+                            if success {
+                                showDatePicker = false
+                            }
                         }
                     }
                 }

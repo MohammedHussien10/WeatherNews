@@ -39,17 +39,14 @@ final class AlertsViewModel:ObservableObject{
         long: Double?,
         dateOfAlert: Date,
         type: AlertType
-    )->Bool {
-        Task {
-               let allowed = await AlertManager.shared.requestPermissionIfNeeded()
-               if !allowed {
-                   showNotificationPermissionAlert = true
-               }
-           }
+    )async->Bool {
 
-           guard showNotificationPermissionAlert == false else {
-               return false
-           }
+               let allowed = await AlertManager.shared.requestPermissionIfNeeded()
+               guard allowed else {
+                   showNotificationPermissionAlert = true
+                   return false
+               }
+        
         guard dateOfAlert > Date() else {
             toastMessage = "toast_future_time".localized
             showToast = true
