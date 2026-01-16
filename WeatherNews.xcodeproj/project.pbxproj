@@ -26,6 +26,7 @@
 		2229CF692EF8C67500526158 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2229CF682EF8C67500526158 /* LocationService.swift */; };
 		222C247D2EF1E10000E84B22 /* AddAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C247C2EF1E10000E84B22 /* AddAlertView.swift */; };
 		22363F1E2ECED396008765E7 /* HourlyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22363F1D2ECED396008765E7 /* HourlyDetails.swift */; };
+		2237A14F2F1A187F00D32549 /* Weather_News.json in Resources */ = {isa = PBXBuildFile; fileRef = 2237A14E2F1A187F00D32549 /* Weather_News.json */; };
 		223930D12EB641670004DD19 /* WeatherApiService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223930D02EB641670004DD19 /* WeatherApiService.swift */; };
 		223E7BB82F0DFE5E00261FD2 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 223E7BB72F0DFE5E00261FD2 /* Lottie */; };
 		223E7BBD2F0E059B00261FD2 /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223E7BBC2F0E059B00261FD2 /* LottieView.swift */; };
@@ -109,6 +110,7 @@
 		2229CF682EF8C67500526158 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		222C247C2EF1E10000E84B22 /* AddAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlertView.swift; sourceTree = "<group>"; };
 		22363F1D2ECED396008765E7 /* HourlyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyDetails.swift; sourceTree = "<group>"; };
+		2237A14E2F1A187F00D32549 /* Weather_News.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Weather_News.json; sourceTree = "<group>"; };
 		223930D02EB641670004DD19 /* WeatherApiService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherApiService.swift; sourceTree = "<group>"; };
 		223E7BBC2F0E059B00261FD2 /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		223E7BC02F0E157300261FD2 /* snowy.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = snowy.json; sourceTree = "<group>"; };
@@ -352,6 +354,7 @@
 		223E7BBB2F0E054B00261FD2 /* Animations */ = {
 			isa = PBXGroup;
 			children = (
+				2237A14E2F1A187F00D32549 /* Weather_News.json */,
 				223E7BC12F0E157400261FD2 /* cloudy.json */,
 				223E7BC32F0E157700261FD2 /* rainy.json */,
 				223E7BC02F0E157300261FD2 /* snowy.json */,
@@ -665,6 +668,7 @@
 				223E7BC72F0E157700261FD2 /* rainy.json in Resources */,
 				223E7BC52F0E157700261FD2 /* cloudy.json in Resources */,
 				223E7BC62F0E157700261FD2 /* sunny.json in Resources */,
+				2237A14F2F1A187F00D32549 /* Weather_News.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
