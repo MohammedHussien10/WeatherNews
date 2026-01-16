@@ -116,10 +116,9 @@ Presentation (SwiftUI Views)
   
 ---
 
-## APIs
+## API
 
-* Weather data provided by a public Weather API
-* Reverse geocoding for city & country names
+* Weather data provided by a public Weather API (https://openweathermap.org/api)
 
 ---
 
