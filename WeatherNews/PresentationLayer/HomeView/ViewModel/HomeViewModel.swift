@@ -301,13 +301,13 @@ struct HelperWeatherDetails {
         unit: TemperatureUnit,
         language: AppLanguage
     ) -> String {
-        
+        let safeValue = abs(value) < 0.5 ? 0 : value
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 0
         formatter.locale = Locale(identifier: language.apiParameter)
         
-        let number = formatter.string(from: NSNumber(value: value)) ?? "\(Int(value))"
+        let number = formatter.string(from: NSNumber(value: safeValue)) ?? "0"
         return String(
             format: "temperature_value".localized,
             number,
