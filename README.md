@@ -70,7 +70,10 @@ Presentation (SwiftUI Views)
 │
 ├── DataSources (Remote / Local)
 │
-└── Services (Location, Alerts, Networking)
+└── Services
+    ├── NetworkService (URLSession-based)
+    ├── LocationService (CoreLocation)
+    ├── AlertService (UserNotifications)
 ```
 
 ### Patterns Used
@@ -88,8 +91,7 @@ Presentation (SwiftUI Views)
 * **Language:** Swift
 * **UI:** SwiftUI
 * **Architecture:** MVVM + Clean Architecture
-* **Networking:** REST APIs
-* **Concurrency:** async / await
+* **Networking:** URLSession (async/await) + REST APIs
 * **Dependency Injection:** Custom DI Container
 * **Security:** Keychain (KeychainSwift)
 * **Persistence:** UserDefaults
